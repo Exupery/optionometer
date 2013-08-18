@@ -1,12 +1,15 @@
-@(title: String)(content: Html)
-
+@(title: String, desc: String="Option screener for multi-leg stock option strategies")(content: Html)
 <!DOCTYPE html>
-
 <html>
     <head>
+    	<meta charset="UTF-8">
         <title>@title</title>
+        <meta name="author" content="Matthew Frost" />
+        <meta name="description" content="@desc" />
+        <meta name="keywords" content="options,stocks,trading,option spreads,scanner,screener,equities,option strategies" />
         <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/main.css")">
         <link rel="shortcut icon" type="image/png" href="@routes.Assets.at("images/favicon.png")">
+        <link rel="publisher" href="https://plus.google.com/100792150980679428272"/>
         <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
         <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
     </head>
