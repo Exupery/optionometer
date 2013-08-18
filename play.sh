@@ -3,6 +3,9 @@ play="play $1"
 cmd=""
 while read line 
 do
-	cmd="$cmd$line "
+    first=`expr index $line '#'` 
+    if [ $first -ne 1 ]; then
+    	cmd="$cmd$line "
+    fi
 done < .env
 eval "$cmd$play"
