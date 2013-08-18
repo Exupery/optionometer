@@ -1,9 +1,13 @@
-@(title: String, desc: String="Option screener for multi-leg stock option strategies")(content: Html)
+@(title: String="optionometer", desc: String="Option screener for multi-leg stock option strategies")(content: Html)
 <!DOCTYPE html>
 <html>
     <head>
     	<meta charset="UTF-8">
-        <title>@title</title>
+    	@if(title.equalsIgnoreCase("optionometer")) {
+    	<title>Optionometer</title>
+    	} else {
+		<title>@title | Optionometer</title>    	
+    	}
         <meta name="author" content="Matthew Frost" />
         <meta name="description" content="@desc" />
         <meta name="keywords" content="options,stocks,trading,option spreads,scanner,screener,equities,option strategies" />
