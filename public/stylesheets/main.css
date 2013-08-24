@@ -6,6 +6,9 @@ html, body {
 	position: relative;
 	padding-bottom: 50px;
 }
+.red {
+	color: #FF0000;
+}
 #footer {
 	position: absolute;
 	bottom: 0;
