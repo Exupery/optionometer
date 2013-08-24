@@ -25,4 +25,8 @@ object Application extends Controller {
     Ok(views.html.recommendations())
   }
   
+  def tos = Action {
+    Ok(views.html.tos())
+  }
+  
 }
