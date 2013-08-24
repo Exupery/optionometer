@@ -17,6 +17,10 @@ object Application extends Controller {
     Ok(views.html.faq())
   }
   
+  def privacy = Action {
+    Ok(views.html.privacy())
+  }
+  
   def recommendations = Action {
     Ok(views.html.recommendations())
   }
