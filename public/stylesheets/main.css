@@ -29,6 +29,9 @@ html, body {
 .navbar {
 	border-radius: 0px;
 }
+.navbar-header {
+	margin-left: 10%;
+}
 .social {
 	display: inline-block;
 	margin-left: 1em;
