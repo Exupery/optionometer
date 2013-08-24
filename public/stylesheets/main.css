@@ -1,6 +1,10 @@
 html, body {
 	height: 100%;
 }
+h1,
+.jumbotron h1 {
+	color: #2E802E;
+}
 .body-content {
 	min-height: 100%;
 	position: relative;
@@ -14,6 +18,12 @@ html, body {
 }
 .light-green {
 	color: #8CB18C;
+}
+#top-nav a {
+	color: #FFFFFF;	
+}
+#top-nav a:hover {
+	color: #94FF99;	
 }
 #footer {
 	position: absolute;
