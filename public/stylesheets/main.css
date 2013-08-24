@@ -18,3 +18,6 @@ html, body {
 .navbar {
 	border-radius: 0px;
 }
+.social {
+	display: inline-block;
+}
