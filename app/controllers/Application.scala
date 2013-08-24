@@ -13,4 +13,8 @@ object Application extends Controller {
     Ok(views.html.disclaimer())
   }
   
+  def faq = Action {
+    Ok(views.html.faq())
+  }
+  
 }
