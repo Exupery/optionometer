@@ -10,8 +10,12 @@ h1,
 	position: relative;
 	padding-bottom: 75px;
 }
+h1,
 .center {
 	text-align: center;
+}
+.left {
+	text-align: left;
 }
 .red {
 	color: #FF0000;
