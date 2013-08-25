@@ -13,6 +13,11 @@ object Application extends Controller {
     Ok(views.html.screener())
   }
   
+  def screen(strat: String, und: String, moneyness: Option[String], minDays: Option[Int], maxDays: Option[Int]) = Action {
+    println(strat, und, moneyness, minDays, maxDays)	//DELME
+    Ok(views.html.screener())
+  }
+  
   def disclaimer = Action {
     Ok(views.html.disclaimer())
   }
@@ -33,4 +38,7 @@ object Application extends Controller {
     Ok(views.html.tos())
   }
   
+  def removeTrailing(path: String) = Action {
+    MovedPermanently("/"+path)
+  }
 }

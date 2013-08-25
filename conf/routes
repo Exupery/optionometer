@@ -4,7 +4,11 @@
 
 # Home page
 GET     /                           controllers.Application.index
+GET		/*path/						controllers.Application.removeTrailing(path)
 GET     /screener                   controllers.Application.screener
+GET     /strat						controllers.Application.screen(strat="all", sym="all", moneyness: Option[String] ?= None, mindays: Option[Int] ?= None, maxdays: Option[Int] ?= None)
+GET     /strat/:strat				controllers.Application.screen(strat, sym="all", moneyness: Option[String] ?= None, mindays: Option[Int] ?= None, maxdays: Option[Int] ?= None)
+GET     /strat/:strat/:sym			controllers.Application.screen(strat, sym, moneyness: Option[String] ?= None, mindays: Option[Int] ?= None, maxdays: Option[Int] ?= None)
 GET     /disclaimer                 controllers.Application.disclaimer
 GET     /faq		                controllers.Application.faq
 GET     /privacy	                controllers.Application.privacy
