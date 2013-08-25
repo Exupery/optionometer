@@ -9,6 +9,10 @@ object Application extends Controller {
     Ok(views.html.index())
   }
   
+  def screener = Action {
+    Ok(views.html.screener())
+  }
+  
   def disclaimer = Action {
     Ok(views.html.disclaimer())
   }

@@ -4,6 +4,7 @@
 
 # Home page
 GET     /                           controllers.Application.index
+GET     /screener                   controllers.Application.screener
 GET     /disclaimer                 controllers.Application.disclaimer
 GET     /faq		                controllers.Application.faq
 GET     /privacy	                controllers.Application.privacy

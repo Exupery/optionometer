@@ -8,7 +8,7 @@ h1,
 .body-content {
 	min-height: 100%;
 	position: relative;
-	padding-bottom: 50px;
+	padding-bottom: 75px;
 }
 .center {
 	text-align: center;
@@ -18,6 +18,17 @@ h1,
 }
 .light-green {
 	color: #8CB18C;
+}
+.margin-2 {
+	margin: 2em;
+}
+.btn-primary {
+	background-color: #47A447;
+	border-color: #398439;
+}
+.btn-primary:hover {
+	background-color: #5CB85C;
+	border-color: #4CAE4C;
 }
 #top-nav a {
 	color: #FFFFFF;	
@@ -39,11 +50,16 @@ h1,
 .navbar {
 	border-radius: 0px;
 }
-.navbar-header {
+.navbar-header,
+.navbar-right {
 	margin-left: 10%;
+	margin-right: 10%;
 }
 .social {
 	display: inline-block;
 	margin-left: 1em;
 	margin-right: 1em;
+}
+#screener-button {
+	padding: 14px 32px;
 }
