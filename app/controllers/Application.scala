@@ -21,6 +21,7 @@ object Application extends Controller {
   
   def screen(strat: String, und: String, moneyness: Option[String]=None, minDays: Option[Int]=None, maxDays: Option[Int]=None) {
 	//TODO perform screen
+    
     println(strat, und, moneyness, minDays, maxDays)	//DELME  
   }
   

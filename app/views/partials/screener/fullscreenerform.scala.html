@@ -1,22 +1,22 @@
 <form id="screener-full" role="form">
 	<label for="strat">Strategy</label>
-	<select name="strat" class="form-control">
+	<select id="strat" name="strat" class="form-control">
 		<option value="all">All</option>
-		<option value="bull">All Bullish</option>
-		<option value="bear">All Bearish</option>
-		<option value="bullcall">Bull Call Spread</option>
-		<option value="bearcall">Bear Call Spread</option>
-		<option value="bullput">Bull Put Spread</option>
-		<option value="bearput">Bear Put Spread</option>
+		<option value="bullish">All Bullish</option>
+		<option value="bearish">All Bearish</option>
+		<option value="bullcalls">Bull Call Spread</option>
+		<option value="bearcalls">Bear Call Spread</option>
+		<option value="bullputs">Bull Put Spread</option>
+		<option value="bearputs">Bear Put Spread</option>
 	</select>
 	
 	<label for="sym">Underlier</label>
-	<select name="sym" class="form-control">
+	<select id="sym" name="sym" class="form-control">
 		<option value="all">All</option>
 	</select>
 	
 	<label for="moneyness">Moneyness</label>
-	<select name="moneyness" class="form-control">
+	<select id="moneyness" name="moneyness" class="form-control">
 		<option value="any">Any</option>
 		<option value="otm">Out of the Money</option>
 		<option value="ntm">Near the Money (+/- 1%)</option>
@@ -24,9 +24,9 @@
 	</select>
 	
 	<label for="mindays">Minimum Days to Expiration</label>
-	<input name="mindays" type="number" class="form-control" placeholder="0">
+	<input id="mindays" name="mindays" type="number" class="form-control" placeholder="0">
 	<label for="maxdays">Maximum Days to Expiration</label>
-	<input name="maxdays" type="number" class="form-control" placeholder="9999">
+	<input id="maxdays" name="maxdays" type="number" class="form-control" placeholder="9999">
 	
 	<button type="submit" class="btn btn-primary">Screen</button>
 </form>
