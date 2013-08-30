@@ -1,32 +1,46 @@
-<form id="screener-full" role="form">
-	<label for="strat">Strategy</label>
-	<select id="strat" name="strat" class="form-control">
-		<option value="all">All</option>
-		<option value="bullish">All Bullish</option>
-		<option value="bearish">All Bearish</option>
-		<option value="bullcalls">Bull Call Spread</option>
-		<option value="bearcalls">Bear Call Spread</option>
-		<option value="bullputs">Bull Put Spread</option>
-		<option value="bearputs">Bear Put Spread</option>
-	</select>
+<form id="screener-full" role="form" class="center">
+	<div class="row">
+		<div class="col-lg-3">
+			<label for="strat">Strategy</label>
+			<select id="strat" name="strat" class="form-control">
+				<option value="all">All</option>
+				<option value="bullish">All Bullish</option>
+				<option value="bearish">All Bearish</option>
+				<option value="bullcalls">Bull Call Spread</option>
+				<option value="bearcalls">Bear Call Spread</option>
+				<option value="bullputs">Bull Put Spread</option>
+				<option value="bearputs">Bear Put Spread</option>
+			</select>
+		</div>
+		
+		<div class="col-lg-3">
+			<label for="sym">Underlier</label>
+			<select id="sym" name="sym" class="form-control">
+				<option value="all">All</option>
+			</select>
+		</div>
+	</div>
 	
-	<label for="sym">Underlier</label>
-	<select id="sym" name="sym" class="form-control">
-		<option value="all">All</option>
-	</select>
+	<div class="row">
+		<div class="col-lg-2">
+			<label for="moneyness">Moneyness</label>
+			<select id="moneyness" name="moneyness" class="form-control">
+				<option value="any">Any</option>
+				<option value="otm">Out of the Money</option>
+				<option value="ntm">Near the Money</option>
+				<option value="itm">In the Money</option>
+			</select>
+		</div>
 	
-	<label for="moneyness">Moneyness</label>
-	<select id="moneyness" name="moneyness" class="form-control">
-		<option value="any">Any</option>
-		<option value="otm">Out of the Money</option>
-		<option value="ntm">Near the Money (+/- 1%)</option>
-		<option value="itm">In the Money</option>
-	</select>
-	
-	<label for="mindays">Minimum Days to Expiration</label>
-	<input id="mindays" name="mindays" type="number" class="form-control" placeholder="0">
-	<label for="maxdays">Maximum Days to Expiration</label>
-	<input id="maxdays" name="maxdays" type="number" class="form-control" placeholder="9999">
+		<div class="col-lg-2">
+			<label for="mindays">Minimum Days to Expiration</label>
+			<input id="mindays" name="mindays" type="number" class="form-control" placeholder="0">
+		</div>
+		<div class="col-lg-2">
+			<label for="maxdays">Maximum Days to Expiration</label>
+			<input id="maxdays" name="maxdays" type="number" class="form-control" placeholder="9999">
+		</div>
+	</div>
 	
 	<button type="submit" class="btn btn-primary">Screen</button>
 </form>

@@ -17,6 +17,9 @@ h1,
 .left {
 	text-align: left;
 }
+.inlineblock {
+	display: inline-block;
+}
 .red {
 	color: #FF0000;
 }
@@ -33,6 +36,14 @@ h1,
 .btn-primary:hover {
 	background-color: #5CB85C;
 	border-color: #4CAE4C;
+}
+#screener-full .row div {
+	margin: 0 auto;
+	float: none;
+	display: inline-block;
+}
+form .row {
+	margin-bottom: 1.25em;
 }
 #top-nav a {
 	color: #FFFFFF;	
