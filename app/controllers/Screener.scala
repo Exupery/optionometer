@@ -36,6 +36,7 @@ object Screener extends Controller {
 	println(trades)			//DELME
 	println(trades.size)	//DELME
 	println(trades(0).underlier,trades(0).undLast,trades(0).expires,trades(0).longSym,trades(0).shortSym)	//DELME
+	println(trades(0).longStrike,trades(0).longBid,trades(0).longAsk,trades(0).shortStrike,trades(0).shortBid,trades(0).shortAsk)	//DELME
   }
   
   def runQuery(sql: SimpleSql[Row]): List[Row] = {
