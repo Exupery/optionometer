@@ -19,21 +19,25 @@ object Screener extends Controller {
   }
   
   def screen(strat: String, und: String, moneyness: Option[String]=None, minDays: Option[Int]=None, maxDays: Option[Int]=None) {
-	//TODO perform screen
+	println(strat, und, moneyness, minDays, maxDays)	//DELME  
+    //TODO perform screen
     val u = "MSFT"
-	val qry = "SELECT COUNT(*) FROM options WHERE underlier={underlier}"
-	val sql = SQL(qry).on("underlier"->u)
+	val qry = """
+	  	SELECT l.underlier, stocks.last_trade, l.exp_unixtime, l.symbol AS longSym, l.bid AS longBid, l.ask AS longAsk, l.strike AS longStrike,
+	  	s.symbol AS shortSym, s.bid AS shortBid, s.ask AS shortAsk, s.strike AS shortStrike
+	  	FROM options AS l JOIN options AS s ON l.underlier=s.underlier AND 
+		l.exp_unixtime=s.exp_unixtime AND l.call_or_put=s.call_or_put 
+	  	JOIN stocks ON l.underlier=stocks.symbol 
+	  	WHERE FROM_UNIXTIME(l.exp_unixtime)>NOW() AND
+		l.underlier={underlier} AND
+		l.call_or_put={callOrPut} AND
+		l.strike<s.strike LIMIT 1;
+	  """	//TODO: revmove limit
+	val sql = SQL(qry).on("underlier"->u, "callOrPut"->"C")
 	val foo = runQuery(sql)
-//    val foo = DB.withConnection { implicit c =>
-//      sql().map { row =>
-//      	println(row)	//DELME
-//      	row
-//      }.toList  
-//    }
-    println(foo.getClass)	//DELME
     println(foo)	//DELME
     
-    println(strat, und, moneyness, minDays, maxDays)	//DELME  
+    
   }
   
   def runQuery(sql: SimpleSql[anorm.Row]): List[Row] = {
