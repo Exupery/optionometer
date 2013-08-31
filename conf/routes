@@ -5,10 +5,10 @@
 # Home page
 GET     /                           controllers.Application.index
 GET		/*path/						controllers.Application.removeTrailing(path)
-GET     /screener                   controllers.Application.screenerNoParams
-#GET     /screener					controllers.Application.screenerWithParams(strat="all", sym="all", moneyness: Option[String] ?= None, mindays: Option[Int] ?= None, maxdays: Option[Int] ?= None)
-GET     /screener/:strat			controllers.Application.screenerWithParams(strat, sym="all", moneyness: Option[String] ?= None, mindays: Option[Int] ?= None, maxdays: Option[Int] ?= None)
-GET     /screener/:strat/:sym		controllers.Application.screenerWithParams(strat, sym, moneyness: Option[String] ?= None, mindays: Option[Int] ?= None, maxdays: Option[Int] ?= None)
+GET     /screener                   controllers.Screener.screenerNoParams
+#GET     /screener					controllers.Screener.screenerWithParams(strat="all", sym="all", moneyness: Option[String] ?= None, mindays: Option[Int] ?= None, maxdays: Option[Int] ?= None)
+GET     /screener/:strat			controllers.Screener.screenerWithParams(strat, sym="all", moneyness: Option[String] ?= None, mindays: Option[Int] ?= None, maxdays: Option[Int] ?= None)
+GET     /screener/:strat/:sym		controllers.Screener.screenerWithParams(strat, sym, moneyness: Option[String] ?= None, mindays: Option[Int] ?= None, maxdays: Option[Int] ?= None)
 GET     /disclaimer                 controllers.Application.disclaimer
 GET     /faq		                controllers.Application.faq
 GET     /privacy	                controllers.Application.privacy
