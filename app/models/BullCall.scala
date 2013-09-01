@@ -5,9 +5,10 @@ import scala.math.BigDecimal
 
 class BullCall(row: Row) extends TwoLegTrade(row) {
   
-  def profitAmount: BigDecimal = shortStrike - longStrike - cost
-  def amountToMaxProfit: BigDecimal = shortStrike - undLast
-  def amountToMaxLoss: BigDecimal = longStrike - undLast
-  def amountToBreakeven: BigDecimal = longStrike + cost - undLast 
+  override def maxProfitAmount: BigDecimal = shortStrike - longStrike - maxLossAmount
+  override def maxLossAmount: BigDecimal = longAsk - shortBid
+  override def maxProfitPrice: BigDecimal = shortStrike
+  override def maxLossPrice: BigDecimal = longStrike
+  override def breakevenPrice: BigDecimal = longStrike + maxLossAmount
 
 }

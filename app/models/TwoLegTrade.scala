@@ -21,9 +21,11 @@ abstract class TwoLegTrade(row: Row) {
   val expires = row[Long]("expires")
   val daysToExpire: Int = ((expires - (System.currentTimeMillis / 1000)) / (60 * 60 *24)).toInt
   
-  val cost = longAsk - shortBid
-  val profitPercent = cost / profitAmount * 100
+  val profitPercent = maxLossAmount / maxProfitAmount * 100
   val profitPercentPerDay = if (daysToExpire > 0) profitPercent / daysToExpire else profitPercent
+  val amountToMaxProfit = maxProfitPrice - undLast
+  val amountToMaxLoss = maxLossPrice - undLast
+  val amountToBreakeven = breakevenPrice - undLast 
   val percentToMaxProfit = amountToMaxProfit / undLast * 100
   val percentToMaxLoss = amountToMaxLoss / undLast * 100
   val percentToBreakeven = amountToBreakeven / undLast * 100
@@ -31,9 +33,11 @@ abstract class TwoLegTrade(row: Row) {
   val percentPerDayToMaxLoss = if (daysToExpire > 0) percentToMaxLoss / daysToExpire else percentToMaxLoss
   val percentPerDayToBreakeven = if (daysToExpire > 0) percentToBreakeven / daysToExpire else percentToBreakeven
   
-  def profitAmount: BigDecimal
-  def amountToMaxProfit: BigDecimal
-  def amountToMaxLoss: BigDecimal
-  def amountToBreakeven: BigDecimal
+  
+  def maxProfitAmount: BigDecimal
+  def maxLossAmount: BigDecimal
+  def maxProfitPrice: BigDecimal
+  def maxLossPrice: BigDecimal
+  def breakevenPrice: BigDecimal
   
 }
