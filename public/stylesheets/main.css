@@ -78,3 +78,19 @@ form .row {
 #screener-button {
 	padding: 14px 32px;
 }
+.table-dark {
+	color: #FFFFFF;
+	background-color: #222222;
+}
+.table-dark th {
+	background-color: #8CB18C;
+}
+.table-striped>tbody>tr:nth-child(odd)>td {
+	background-color: #080808;
+}
+.table-striped>tbody>tr:nth-child(even)>td {
+	background-color: #3D3D3D;
+}
+.table-hover>tbody>tr:hover>td {
+	background-color: #2E802E;
+}

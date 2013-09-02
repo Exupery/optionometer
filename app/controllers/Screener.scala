@@ -26,18 +26,12 @@ object Screener extends Controller {
 	  	SELECT * FROM twolegs WHERE FROM_UNIXTIME(expires)>NOW() AND
 		underlier={underlier} AND
 		callOrPut={callOrPut} AND
-		longStrike<shortStrike LIMIT 5;
+		longStrike<shortStrike LIMIT 25;
 	  """	//TODO: revmove limit
 	val sql = SQL(qry).on("underlier"->u, "callOrPut"->cp)
     val trades: List[TwoLegTrade] = runQuery(sql).map { row =>
       new BullCall(row)	
 	}
-	println(trades)			//DELME
-	println(trades.size)	//DELME
-//	println(trades(0).underlier,trades(0).undLast,trades(0).expires,trades(0).longSym,trades(0).shortSym)	//DELME
-//	println(trades(0).longStrike,trades(0).longBid,trades(0).longAsk,trades(0).shortStrike,trades(0).shortBid,trades(0).shortAsk)	//DELME
-//	println(trades(0).cost,trades(0).maxProfitAmount,trades(0).amountToMaxProfit,trades(0).percentPerDayToMaxProfit)	//DELME
-//	println(trades(0).amountToMaxLoss,trades(0).percentPerDayToMaxLoss)	//DELME
 	return trades
   }
   
