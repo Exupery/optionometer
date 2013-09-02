@@ -7,10 +7,10 @@ class BearPut(row: Row) extends TwoLegTrade(row) {
   
   override val lowerStrike: BigDecimal = shortStrike
   override val higherStrike: BigDecimal = longStrike
-  override def maxProfitAmount: BigDecimal = longStrike - shortStrike - maxLossAmount
+  override def maxProfitAmount: BigDecimal = higherStrike - lowerStrike - maxLossAmount
   override def maxLossAmount: BigDecimal = longBid - shortAsk
-  override def maxProfitPrice: BigDecimal = longStrike
-  override def maxLossPrice: BigDecimal = shortStrike
-  override def breakevenPrice: BigDecimal = shortStrike - maxLossAmount
+  override def maxProfitPrice: BigDecimal = lowerStrike
+  override def maxLossPrice: BigDecimal = higherStrike
+  override def breakevenPrice: BigDecimal = higherStrike - maxLossAmount
 
 }
