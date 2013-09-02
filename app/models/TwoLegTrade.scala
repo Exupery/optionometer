@@ -34,12 +34,12 @@ abstract class TwoLegTrade(row: Row) {
   val percentPerDayToBreakeven = if (daysToExpire > 0) percentToBreakeven / daysToExpire else percentToBreakeven
   
   
-  val maxProfitAmount: BigDecimal
-  val maxLossAmount: BigDecimal
-  val maxProfitPrice: BigDecimal
-  val maxLossPrice: BigDecimal
-  val breakevenPrice: BigDecimal
-  val lowerStrike: BigDecimal
-  val higherStrike: BigDecimal
+  def maxProfitAmount: BigDecimal
+  def maxLossAmount: BigDecimal
+  def maxProfitPrice: BigDecimal
+  def maxLossPrice: BigDecimal
+  def breakevenPrice: BigDecimal
+  def lowerStrike: BigDecimal
+  def higherStrike: BigDecimal
   
 }
