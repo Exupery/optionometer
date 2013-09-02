@@ -39,5 +39,7 @@ abstract class TwoLegTrade(row: Row) {
   def maxProfitPrice: BigDecimal
   def maxLossPrice: BigDecimal
   def breakevenPrice: BigDecimal
+  val lowerStrike: BigDecimal
+  val higherStrike: BigDecimal
   
 }

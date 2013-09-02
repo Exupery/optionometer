@@ -1,0 +1,31 @@
+@(trades: List[TwoLegTrade])
+<table class="table">
+	<thead>
+		<tr>
+			<th>Underlier</th>
+			<th>Underlier Last</th>
+			<th>Lower Strike</th>
+			<th>Higher Strike</th>
+			<th>Max Loss</th>
+			<th>Max Profit</th>
+			<th>Profit percent</th>
+			<th>Profit per Day</th>
+			<th>Days to Expire</th>		
+		</tr>
+	</thead>
+	<tbody>
+	@trades.map { trade =>
+		<tr>
+			<td>@trade.underlier</td>
+			<td>@trade.undLast</td>
+			<td>@trade.lowerStrike</td>
+			<td>@trade.higherStrike</td>
+			<td>@trade.maxLossAmount</td>
+			<td>@trade.maxProfitAmount</td>
+			<td>@trade.profitPercent</td>
+			<td>@trade.profitPercentPerDay</td>
+			<td>@trade.daysToExpire</td>				
+		</tr>
+	}
+	</tbody>
+</table>

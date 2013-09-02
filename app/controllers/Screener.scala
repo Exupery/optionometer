@@ -10,16 +10,15 @@ import models._
 object Screener extends Controller {
   
   def screenerNoParams = Action {
-    screen("all", "all")
     Ok(views.html.screener())
   }
   
   def screenerWithParams(strat: String, und: String, moneyness: Option[String], minDays: Option[Int], maxDays: Option[Int]) = Action {
-    screen(strat, und, moneyness, minDays, maxDays)
-    Ok(views.html.screener())
+    val trades = screen(strat, und, moneyness, minDays, maxDays)
+    Ok(views.html.trades(trades))
   }
   
-  def screen(strat: String, und: String, moneyness: Option[String]=None, minDays: Option[Int]=None, maxDays: Option[Int]=None) {
+  def screen(strat: String, und: String, moneyness: Option[String]=None, minDays: Option[Int]=None, maxDays: Option[Int]=None): List[TwoLegTrade] = {
 	println(strat, und, moneyness, minDays, maxDays)	//DELME  
     val u = "MSFT"	//TODO get from params
     val cp = "C"	//TODO get from params
@@ -39,6 +38,7 @@ object Screener extends Controller {
 //	println(trades(0).longStrike,trades(0).longBid,trades(0).longAsk,trades(0).shortStrike,trades(0).shortBid,trades(0).shortAsk)	//DELME
 //	println(trades(0).cost,trades(0).maxProfitAmount,trades(0).amountToMaxProfit,trades(0).percentPerDayToMaxProfit)	//DELME
 //	println(trades(0).amountToMaxLoss,trades(0).percentPerDayToMaxLoss)	//DELME
+	return trades
   }
   
   def runQuery(sql: SimpleSql[Row]): List[Row] = {
