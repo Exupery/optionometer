@@ -4,6 +4,8 @@ $(document).ready(function() {
 		submitScreen("#"+this.id);
 		return false;
 	});
+	
+	$(".table-sorted").tablesorter();
 
 });
 

@@ -91,6 +91,14 @@ form .row {
 .table-striped>tbody>tr:nth-child(even)>td {
 	background-color: #3D3D3D;
 }
+.table-sorted th:hover,
 .table-hover>tbody>tr:hover>td {
 	background-color: #2E802E;
+}
+.table-sorted th:hover {
+	cursor: pointer;
+}
+th.headerSortUp,
+th.headerSortDown {
+	background-color: #004E00;	
 }
