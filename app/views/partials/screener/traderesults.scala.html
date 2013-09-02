@@ -16,14 +16,14 @@
 	<tbody>
 	@trades.map { trade =>
 		<tr>
-			<td>@trade.underlier</td>
+			<td class="center">@trade.underlier</td>
 			<td>@trade.undLast</td>
 			<td>@trade.lowerStrike</td>
 			<td>@trade.higherStrike</td>
-			<td>@trade.maxLossAmount</td>
-			<td>@trade.maxProfitAmount</td>
-			<td>@trade.profitPercent</td>
-			<td>@trade.profitPercentPerDay</td>
+			<td><span class="s">$</span>@trade.maxLossAmount</td>
+			<td><span class="s">$</span>@trade.maxProfitAmount</td>
+			<td>@trade.profitPercent<span class="s">%</span></td>
+			<td>@trade.profitPercentPerDay<span class="s">%</span></td>
 			<td>@trade.daysToExpire</td>				
 		</tr>
 	}

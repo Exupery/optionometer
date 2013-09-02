@@ -78,12 +78,16 @@ form .row {
 #screener-button {
 	padding: 14px 32px;
 }
+td {
+	text-align: right;
+}
 .table-dark {
 	color: #FFFFFF;
 	background-color: #222222;
 }
 .table-dark th {
-	background-color: #8CB18C;
+	background-color: #004E00;
+	text-align: center;
 }
 .table-striped>tbody>tr:nth-child(odd)>td {
 	background-color: #080808;
@@ -100,5 +104,11 @@ form .row {
 }
 th.headerSortUp,
 th.headerSortDown {
-	background-color: #004E00;	
+	background-color: #8CB18C;	
+}
+.table-dark .s {
+	font-size: 0.8em;
+	padding-right: 0.2em;
+	padding-left: 0.1em;
+	color: #F0FFF0;
 }
