@@ -30,9 +30,11 @@ object Screener extends Controller {
 //	  """	//TODO: revmove limit
 //	val sql = SQL(qry).on("underlier"->u, "callOrPut"->cp)
 //	val base = "SELECT * FROM twolegs WHERE FROM_UNIXTIME(expires)>NOW()"
-	val base = "SELECT * FROM twolegs WHERE FROM_UNIXTIME(expires)>NOW() " + strikeAndType(strat)
-	val sql: SimpleSql[Row] = if (und.equalsIgnoreCase("any")) {
-	  SQL(base + " LIMIT 25") 
+	val base = "SELECT * FROM twolegs WHERE FROM_UNIXTIME(expires)>NOW() AND " +
+	  strikeAndType(strat) + " " + money(moneyness.getOrElse("any"))
+	println(base)	//DELME
+	val sql: SimpleSql[Row] = if (und.equalsIgnoreCase("all")) {
+	  SQL(base + " LIMIT 25").asSimple
 	} else {
 	  SQL(base+" AND underlier={underlier} LIMIT 25").on("underlier"->und)
 	}
@@ -52,6 +54,19 @@ object Screener extends Controller {
       case "bearish" => "longStrike > shortStrike"
 	  case _ => "longStrike != shortStrike"
 	}
+  }
+  
+  def money(moneyness: String): String = {
+    //TODO: handle itm/otm
+    val between = moneyness.toLowerCase match {
+      case "itm" => (0.75, 1.25)
+      case "atm" => (0.975, 1.025)
+      case "otm" => (0.75, 1.25)
+      case _ => (0.75, 1.25)
+      
+    }
+    return "AND longStrike BETWEEN (undLast*"+between._1+") AND (undLast*"+between._2+") "+
+			"AND shortStrike BETWEEN (undLast*"+between._1+") AND (undLast*"+between._2+")"
   }
   
   def runQuery(sql: SimpleSql[Row]): List[Row] = {
