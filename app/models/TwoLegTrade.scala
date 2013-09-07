@@ -21,17 +21,17 @@ abstract class TwoLegTrade(row: Row) {
   val expires = row[Long]("expires")
   val daysToExpire: Int = ((expires - (System.currentTimeMillis / 1000)) / (60 * 60 *24)).toInt
   
-  val profitPercent = twoDigit(maxLossAmount / maxProfitAmount * 100)
-  val profitPercentPerDay = twoDigit(if (daysToExpire > 0) profitPercent / daysToExpire else profitPercent)
+  val profitPercent = twoDigit(if (maxProfitAmount != 0) maxLossAmount / maxProfitAmount * 100 else 0)
+  val profitPercentPerDay = twoDigit(if (daysToExpire != 0) profitPercent / daysToExpire else profitPercent)
   val amountToMaxProfit = maxProfitPrice - undLast
   val amountToMaxLoss = maxLossPrice - undLast
   val amountToBreakeven = breakevenPrice - undLast 
   val percentToMaxProfit = twoDigit(amountToMaxProfit / undLast * 100)
   val percentToMaxLoss = twoDigit(amountToMaxLoss / undLast * 100)
   val percentToBreakeven = twoDigit(amountToBreakeven / undLast * 100)
-  val percentPerDayToMaxProfit = twoDigit(if (daysToExpire > 0) percentToMaxProfit / daysToExpire else percentToMaxProfit)
-  val percentPerDayToMaxLoss = twoDigit(if (daysToExpire > 0) percentToMaxLoss / daysToExpire else percentToMaxLoss)
-  val percentPerDayToBreakeven = twoDigit(if (daysToExpire > 0) percentToBreakeven / daysToExpire else percentToBreakeven)
+  val percentPerDayToMaxProfit = twoDigit(if (daysToExpire != 0) percentToMaxProfit / daysToExpire else percentToMaxProfit)
+  val percentPerDayToMaxLoss = twoDigit(if (daysToExpire != 0) percentToMaxLoss / daysToExpire else percentToMaxLoss)
+  val percentPerDayToBreakeven = twoDigit(if (daysToExpire != 0) percentToBreakeven / daysToExpire else percentToBreakeven)
   
   
   def maxProfitAmount: BigDecimal
