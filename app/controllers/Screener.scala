@@ -20,12 +20,13 @@ object Screener extends Controller {
   
   def screen(strat: String, und: String, moneyness: Option[String]=None, minDays: Option[Int]=None, maxDays: Option[Int]=None): List[TwoLegTrade] = {
 	val limit = 25	//TODO: adjust limit
-    println(strat, und, moneyness, minDays, maxDays)	//DELME  
 	val query = {
-	  "SELECT * FROM twolegs WHERE FROM_UNIXTIME(expires)>NOW() AND " +
+	  "SELECT * FROM twolegs WHERE " +
 	  strikeClause(strat.toLowerCase) + " AND " +
-	  money(strat.toLowerCase, moneyness.getOrElse("any"))
+	  moneyClause(strat.toLowerCase, moneyness.getOrElse("any")) +
+	  (if (minDays.isDefined || maxDays.isDefined) " AND " + daysClause(minDays, maxDays) else "")
 	}
+	println(strat, und, moneyness, minDays, maxDays)	//DELME 
 	println(query)	//DELME
 	val sql: SimpleSql[Row] = if (und.equalsIgnoreCase("all")) {
 	  SQL(query + " LIMIT {limit}").on("limit"->limit)
@@ -47,7 +48,7 @@ object Screener extends Controller {
     return "longStrike " + opr + " shortStrike"
   }
   
-  def money(strat: String, moneyness: String): String = {
+  def moneyClause(strat: String, moneyness: String): String = {
     moneyness.toLowerCase match {
       case "itm" => if (strat.startsWith("bull")) "undLast > shortStrike" else "undLast < shortStrike"
       case "otm" => if (strat.startsWith("bull")) "undLast < shortStrike" else "undLast > shortStrike"
@@ -55,6 +56,15 @@ object Screener extends Controller {
       case _ => "shortStrike BETWEEN (undLast*0.75) AND (undLast*1.25)"
       
     }
+  }
+  
+  def daysClause(minDays: Option[Int], maxDays: Option[Int]): String = {
+    val secondsInDay = 24 * 60 * 60
+    val minSec = minDays.getOrElse(0) * secondsInDay
+    val maxSec = maxDays.getOrElse(999) * secondsInDay
+    val minExp = (System.currentTimeMillis / 1000) + minSec
+    val maxExp = (System.currentTimeMillis / 1000) + maxSec
+    return "expires BETWEEN " + minExp + " AND " + maxExp
   }
   
   def runQuery(sql: SimpleSql[Row]): List[Row] = {
