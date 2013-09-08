@@ -14,24 +14,28 @@ object Screener extends Controller {
   }
   
   def screenerWithParams(strat: String, und: String, moneyness: Option[String], minDays: Option[Int], maxDays: Option[Int]) = Action {
-    val trades = screen(strat, und, moneyness, minDays, maxDays)
-    Ok(views.html.trades(trades))
+    val trades = screen(ScreenParams(strat, und, moneyness, minDays, maxDays))
+    Ok(views.html.trades(trades)).withCookies(Cookie("key1", "value"), Cookie("key2", "value2"))
   }
   
-  def screen(strat: String, und: String, moneyness: Option[String]=None, minDays: Option[Int]=None, maxDays: Option[Int]=None): List[TwoLegTrade] = {
-	val limit = 25	//TODO: adjust limit
+  def screen(params: ScreenParams): List[TwoLegTrade] = {
+	val limit = 5	//TODO: adjust limit
 	val query = {
 	  "SELECT * FROM twolegs WHERE " +
-	  strikeClause(strat.toLowerCase) + " AND " +
-	  moneyClause(strat.toLowerCase, moneyness.getOrElse("any")) +
-	  (if (minDays.isDefined || maxDays.isDefined) " AND " + daysClause(minDays, maxDays) else "")
+	  strikeClause(params.strat.toLowerCase) + " AND " +
+	  moneyClause(params.strat.toLowerCase, params.moneyness.getOrElse("any")) +
+	  (if (params.minDays.isDefined || params.maxDays.isDefined) {
+	    " AND " + daysClause(params.minDays, params.maxDays)
+	  } else {
+	    ""
+	  })
 	}
-	println(strat, und, moneyness, minDays, maxDays)	//DELME 
+	println(params)	//DELME 
 	println(query)	//DELME
-	val sql: SimpleSql[Row] = if (und.equalsIgnoreCase("all")) {
+	val sql: SimpleSql[Row] = if (params.und.equalsIgnoreCase("all")) {
 	  SQL(query + " LIMIT {limit}").on("limit"->limit)
 	} else {
-	  SQL(query+" AND underlier={underlier} LIMIT {limit}").on("underlier"->und, "limit"->limit)
+	  SQL(query+" AND underlier={underlier} LIMIT {limit}").on("underlier"->params.und, "limit"->limit)
 	}
     val trades: List[TwoLegTrade] = runQuery(sql).map { row =>
       new BullCall(row)	
@@ -70,5 +74,7 @@ object Screener extends Controller {
   def runQuery(sql: SimpleSql[Row]): List[Row] = {
     DB.withConnection(implicit c => sql().toList)
   }
+  
+  case class ScreenParams(strat: String, und: String, moneyness: Option[String]=None, minDays: Option[Int]=None, maxDays: Option[Int]=None)
 
 }
