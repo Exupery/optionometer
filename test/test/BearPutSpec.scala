@@ -6,28 +6,28 @@ import play.api.test._
 import play.api.test.Helpers._
 import controllers.Screener.ScreenParams
 
-class BullCallSpec extends Specification {
-  
+class BearPutSpec extends Specification {
+
   val trade = {
     running(FakeApplication()) {
-    	controllers.Screener.screen(ScreenParams("bullcall", "all"))(0)
+    	controllers.Screener.screen(ScreenParams("bearput", "all"))(0)
     }
   }
   
-  "a BullCall" should {
+  "a BearPut" should {
     
-    "have a long strike lower than the short strike" in {
-      trade.longStrike must be_==(trade.lowerStrike)
-      trade.shortStrike must be_==(trade.higherStrike)
-      trade.longStrike must be_<(trade.shortStrike)
+    "have a short strike lower than the long strike" in {
+      trade.shortStrike must be_==(trade.lowerStrike)
+      trade.longStrike must be_==(trade.higherStrike)
+      trade.shortStrike must be_<(trade.longStrike)
     }
     
-    "have a max profit price equal to the higher strike" in {
-      trade.maxProfitPrice must be_==(trade.higherStrike)
+    "have a max profit price equal to the lower strike" in {
+      trade.maxProfitPrice must be_==(trade.lowerStrike)
     }
     
-    "have a max loss price equal to the lower strike" in {
-      trade.maxLossPrice must be_==(trade.lowerStrike)
+    "have a max loss price equal to the higher strike" in {
+      trade.maxLossPrice must be_==(trade.higherStrike)
     }
     
     "have a max profit equal to difference in strike minus cost of trade" in {
@@ -40,6 +40,6 @@ class BullCallSpec extends Specification {
       trade.maxLossAmount must be_==(trade.longAsk-trade.shortBid)
     }
     
-  }
+  }  
   
 }
