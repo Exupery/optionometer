@@ -20,16 +20,12 @@ object Screener extends Controller {
   }
   
   def screen(params: ScreenParams): List[TwoLegTrade] = {
-	val limit = 5	//TODO: adjust limit
+	val limit = 10	//TODO: adjust limit
 	val query = {
 	  "SELECT * FROM twolegs WHERE " +
 	  strikeClause(params.strat.toLowerCase) + " AND " +
-	  moneyClause(params.strat.toLowerCase, params.moneyness.getOrElse("any")) +
-	  (if (params.minDays.isDefined || params.maxDays.isDefined) {
-	    " AND " + daysClause(params.minDays, params.maxDays)
-	  } else {
-	    ""
-	  })
+	  moneyClause(params.strat.toLowerCase, params.moneyness.getOrElse("any")) + " AND " + 
+	  daysClause(params.minDays, params.maxDays)
 	}
 	println(params)	//DELME 
 	println(query)	//DELME
