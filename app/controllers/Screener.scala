@@ -14,8 +14,9 @@ object Screener extends Controller {
   }
   
   def screenerWithParams(strat: String, und: String, moneyness: Option[String], minDays: Option[Int], maxDays: Option[Int]) = Action {
-    val trades = screen(ScreenParams(strat, und, moneyness, minDays, maxDays))
-    Ok(views.html.trades(trades)).withCookies(Cookie("key1", "value"), Cookie("key2", "value2"))
+    val params = ScreenParams(strat, und, moneyness, minDays, maxDays)
+    val trades = screen(params)
+    Ok(views.html.trades(trades)).withCookies(params.cookies:_*)
   }
   
   def screen(params: ScreenParams): List[TwoLegTrade] = {
@@ -75,6 +76,17 @@ object Screener extends Controller {
     DB.withConnection(implicit c => sql().toList)
   }
   
-  case class ScreenParams(strat: String, und: String, moneyness: Option[String]=None, minDays: Option[Int]=None, maxDays: Option[Int]=None)
+  case class ScreenParams(strat: String, und: String, moneyness: Option[String]=None, minDays: Option[Int]=None, maxDays: Option[Int]=None) {
+    val cookies = Seq(
+        cookie("strat", strat), 
+        cookie("und", und), 
+        cookie("moneyness", moneyness.getOrElse("any")),
+        cookie("minDays", minDays.getOrElse(0).toString),
+        cookie("maxDays", maxDays.getOrElse(0).toString)
+    )
+    private def cookie(key: String, value: String): Cookie = {
+      Cookie(key, value, None, "/screener", None, false, false)
+    }
+  }
 
 }

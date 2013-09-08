@@ -7,6 +7,8 @@ $(document).ready(function() {
 	
 	$(".table-sorted").tablesorter();
 
+	updateScreenerInputs();
+
 });
 
 function submitScreen(formId) {
@@ -38,6 +40,11 @@ function submitScreen(formId) {
 	}
 	
 	window.location = href;
+}
+
+function updateScreenerInputs() {
+	var cookies = $.cookie();
+	console.log(cookies);	//DELME
 }
 
 function mailto() {
