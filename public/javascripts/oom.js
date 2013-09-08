@@ -43,8 +43,23 @@ function submitScreen(formId) {
 }
 
 function updateScreenerInputs() {
-	var cookies = $.cookie();
-	console.log(cookies);	//DELME
+	var ck = $.cookie();
+	if (ck.strat) {
+		$("#strat").val(ck.strat);
+	}
+	if (ck.sym) {
+		$("#sym").val(ck.sym);
+	}
+	if (ck.moneyness) {
+		$("#moneyness").val(ck.moneyness);
+	}
+	if (ck.minDays && ck.minDays > 0) {
+		$("#mindays").val(ck.minDays);
+	}
+	if (ck.maxDays && ck.maxDays > 0) {
+		$("#maxdays").val(ck.maxDays);
+	}
+	
 }
 
 function mailto() {

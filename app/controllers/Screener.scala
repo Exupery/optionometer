@@ -79,7 +79,7 @@ object Screener extends Controller {
   case class ScreenParams(strat: String, und: String, moneyness: Option[String]=None, minDays: Option[Int]=None, maxDays: Option[Int]=None) {
     val cookies = Seq(
         cookie("strat", strat), 
-        cookie("und", und), 
+        cookie("sym", und), 
         cookie("moneyness", moneyness.getOrElse("any")),
         cookie("minDays", minDays.getOrElse(0).toString),
         cookie("maxDays", maxDays.getOrElse(0).toString)
