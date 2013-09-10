@@ -21,7 +21,7 @@ abstract class TwoLegTrade(row: Row) {
   val expires = row[Long]("expires")
   val daysToExpire: Int = ((expires - (System.currentTimeMillis / 1000)) / (60 * 60 *24)).toInt
   
-  val profitPercent = twoDigit(if (maxProfitAmount != 0) maxLossAmount / maxProfitAmount * 100 else 0)
+  val profitPercent = twoDigit(if (maxProfitAmount != 0) maxProfitAmount / maxLossAmount * 100 else 0)
   val profitPercentPerDay = twoDigit(if (daysToExpire != 0) profitPercent / daysToExpire else profitPercent)
   val amountToMaxProfit = maxProfitPrice - undLast
   val amountToMaxLoss = maxLossPrice - undLast
