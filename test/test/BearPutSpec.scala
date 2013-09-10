@@ -30,6 +30,10 @@ class BearPutSpec extends Specification {
       trade.maxLossPrice must be_==(trade.higherStrike)
     }
     
+    "have a breakeven price equal to the higher strike minus debit paid" in {
+      trade.breakevenPrice must be_==(trade.higherStrike-(trade.longAsk-trade.shortBid))
+    }
+    
     "have a max profit equal to difference in strike minus cost of trade" in {
       val strikeDiff = trade.higherStrike-trade.lowerStrike
       val cost = trade.longAsk-trade.shortBid

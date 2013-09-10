@@ -30,13 +30,17 @@ class BearCallSpec extends Specification {
       trade.maxLossPrice must be_==(trade.higherStrike)
     }
     
+    "have a breakeven price equal to the lower strike plus credit received" in {
+      trade.breakevenPrice must be_==(trade.higherStrike-(trade.shortBid-trade.longAsk))
+    }
+    
     "have a max profit equal to credit from short minus debit for long" in {
       trade.maxProfitAmount must be_==(trade.shortBid-trade.longAsk)
     }
     
     "have a max loss equal to difference in strikes minus premium received" in {
       val strikeDiff = trade.higherStrike-trade.lowerStrike
-      val credit= trade.shortBid-trade.longAsk
+      val credit = trade.shortBid-trade.longAsk
       trade.maxLossAmount must be_==(strikeDiff-credit)
     }
     

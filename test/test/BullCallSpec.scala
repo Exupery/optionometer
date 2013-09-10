@@ -30,6 +30,10 @@ class BullCallSpec extends Specification {
       trade.maxLossPrice must be_==(trade.lowerStrike)
     }
     
+    "have a breakeven price equal to the lower strike plus debit paid" in {
+      trade.breakevenPrice must be_==(trade.lowerStrike+(trade.longAsk-trade.shortBid))
+    }
+    
     "have a max profit equal to difference in strike minus cost of trade" in {
       val strikeDiff = trade.higherStrike-trade.lowerStrike
       val cost = trade.longAsk-trade.shortBid
