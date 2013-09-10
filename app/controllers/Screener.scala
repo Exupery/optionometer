@@ -35,7 +35,13 @@ object Screener extends Controller {
 	  SQL(query+" AND underlier={underlier} LIMIT {limit}").on("underlier"->params.und, "limit"->limit)
 	}
     val trades: List[TwoLegTrade] = runQuery(sql).map { row =>
-      new BullCall(row)	
+      params.strat match {
+        case "bullcall" => new BullCall(row)
+        case "bearcall" => new BearCall(row)
+        case "bullput" => new BullPut(row)
+        case "bearput" => new BearPut(row)
+        case _ => new BullCall(row)		//TODO handle non specific screens (bullish/bearish/all)
+      }
 	}
 	return trades
   }
