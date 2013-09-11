@@ -8,7 +8,7 @@ class BearPut(row: Row) extends TwoLegTrade(row) {
   override def lowerStrike: BigDecimal = shortStrike
   override def higherStrike: BigDecimal = longStrike
   override def maxProfitAmount: BigDecimal = higherStrike - lowerStrike - maxLossAmount
-  override def maxLossAmount: BigDecimal = longBid - shortAsk
+  override def maxLossAmount: BigDecimal = longAsk - shortBid
   override def maxProfitPrice: BigDecimal = lowerStrike
   override def maxLossPrice: BigDecimal = higherStrike
   override def breakevenPrice: BigDecimal = higherStrike - maxLossAmount
