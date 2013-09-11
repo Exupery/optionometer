@@ -9,13 +9,11 @@ abstract class TwoLegTrade(row: Row) {
   val undLast = twoDigit(row[JBD]("undLast"))
   
   val longSym = row[String]("longSym")
-  val longBid = twoDigit(row[JBD]("longBid"))
   val longAsk = twoDigit(row[JBD]("longAsk"))
   val longStrike = twoDigit(row[JBD]("longStrike"))
   
   val shortSym = row[String]("shortSym")
   val shortBid = twoDigit(row[JBD]("shortBid"))
-  val shortAsk = twoDigit(row[JBD]("shortAsk"))
   val shortStrike = twoDigit(row[JBD]("shortStrike"))
   
   val expires = row[Long]("expires")
