@@ -15,35 +15,44 @@ object Screener extends Controller {
   
   def screenerWithParams(strat: String, und: String, moneyness: Option[String], minDays: Option[Int], maxDays: Option[Int]) = Action {
     val params = ScreenParams(strat, und, moneyness, minDays, maxDays)
-    val trades = screen(params)
+    val strats = List("bullish", "bearish", "bullcalls", "bearcalls", "bullputs", "bearputs")
+    val trades = if (strats.contains(strat)) {
+      screen(ScreenParams(strat, und, moneyness, minDays, maxDays))
+    } else {
+      Seq("bullish", "bearish").foldLeft(List.empty[TwoLegTrade]) { (list, strategy) => 
+        list ++ screen(ScreenParams(strategy, und, moneyness, minDays, maxDays))
+      }
+    }
+    println(trades.size)			//DELME
     Ok(views.html.trades(trades)).withCookies(params.cookies:_*)
   }
   
   def screen(params: ScreenParams): List[TwoLegTrade] = {
-	val limit = 10	//TODO: adjust limit
-	val query = {
-	  "SELECT * FROM twolegs WHERE " +
-	  strikeClause(params.strat.toLowerCase) + " AND " +
-	  moneyClause(params.strat.toLowerCase, params.moneyness.getOrElse("any")) + " AND " + 
-	  daysClause(params.minDays, params.maxDays)
-	}
-	println(params)	//DELME 
-	println(query)	//DELME
-	val sql: SimpleSql[Row] = if (params.und.equalsIgnoreCase("all")) {
-	  SQL(query + " LIMIT {limit}").on("limit"->limit)
-	} else {
-	  SQL(query+" AND underlier={underlier} LIMIT {limit}").on("underlier"->params.und, "limit"->limit)
-	}
+		val limit = 12	//TODO: adjust limit
+		val query = {
+		  "SELECT * FROM twolegs WHERE " +
+		  strikeClause(params.strat) + " AND " +
+		  moneyClause(params.strat, params.moneyness.getOrElse("any")) + " AND " + 
+		  daysClause(params.minDays, params.maxDays)
+		}
+		println(params)	//DELME 
+		println(query)	//DELME
+		val sql: SimpleSql[Row] = if (params.und.equalsIgnoreCase("all")) {
+		  SQL(query + " LIMIT {limit}").on("limit"->limit)
+		} else {
+		  SQL(query+" AND underlier={underlier} LIMIT {limit}").on("underlier"->params.und, "limit"->limit)
+		}
     val trades: List[TwoLegTrade] = runQuery(sql).map { row =>
-      params.strat match {
+      params.strat.toLowerCase match {
         case "bullcall" => new BullCall(row)
         case "bearcall" => new BearCall(row)
         case "bullput" => new BullPut(row)
         case "bearput" => new BearPut(row)
-        case _ => new BullCall(row)		//TODO handle non specific screens (bullish/bearish/all)
+        case "bullish" => if (row[String]("callOrPut").equalsIgnoreCase("C")) new BullCall(row) else new BullPut(row)
+        case "bearish" => if (row[String]("callOrPut").equalsIgnoreCase("C")) new BearCall(row) else new BearPut(row)
       }
-	}
-	return trades
+	  }
+	  return trades
   }
   
   def strikeClause(strat: String): String = {
@@ -61,7 +70,6 @@ object Screener extends Controller {
       case "otm" => if (strat.startsWith("bull")) "undLast < shortStrike" else "undLast > shortStrike"
       case "ntm" => "shortStrike BETWEEN (undLast*0.975) AND (undLast*1.025)"
       case _ => "shortStrike BETWEEN (undLast*0.75) AND (undLast*1.25)"
-      
     }
   }
   
