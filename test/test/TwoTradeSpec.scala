@@ -5,12 +5,13 @@ import org.specs2.mutable._
 import play.api.test._
 import play.api.test.Helpers._
 import controllers.Screener.ScreenParams
+import models.Strategy
 
 class TwoTradeSpec extends Specification {
   
   val trade = {
     running(FakeApplication()) {
-    	controllers.Screener.screen(ScreenParams("bullcalls", "all"))(0)
+    	controllers.Screener.screen(ScreenParams(Strategy.BullCalls, "all"))(0)
     }
   }
   

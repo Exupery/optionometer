@@ -13,14 +13,22 @@ object Screener extends Controller {
     Ok(views.html.screener())
   }
   
-  def screenerWithParams(strat: String, und: String, moneyness: Option[String], minDays: Option[Int], maxDays: Option[Int]) = Action {
+  def screenerWithParams(strategy: String, und: String, moneyness: Option[String], minDays: Option[Int], maxDays: Option[Int]) = Action {
+    val strat = strategy match {
+      case "bullcalls" => Strategy.BullCalls
+      case "bearcalls" => Strategy.BearCalls
+      case "bullputs" => Strategy.BullPuts
+      case "bearputs" => Strategy.BearPuts
+      case "bullish" => Strategy.AllBullish
+      case "bearish" => Strategy.AllBearish
+      case _ => Strategy.All
+    }
     val params = ScreenParams(strat, und, moneyness, minDays, maxDays)
-    val strats = List("bullish", "bearish", "bullcalls", "bearcalls", "bullputs", "bearputs")
-    val trades = if (strats.contains(strat)) {
+    val trades = if (strat.ne(Strategy.All)) {
       screen(ScreenParams(strat, und, moneyness, minDays, maxDays))
     } else {
-      Seq("bullish", "bearish").foldLeft(List.empty[TwoLegTrade]) { (list, strategy) => 
-        list ++ screen(ScreenParams(strategy, und, moneyness, minDays, maxDays))
+      Seq(Strategy.AllBullish, Strategy.AllBearish).foldLeft(List.empty[TwoLegTrade]) { (l, s) => 
+        l ++ screen(ScreenParams(s, und, moneyness, minDays, maxDays))
       }
     }
     println(trades.size)			//DELME
@@ -43,31 +51,31 @@ object Screener extends Controller {
 		  SQL(query+" AND underlier={underlier} LIMIT {limit}").on("underlier"->params.und, "limit"->limit)
 		}
     val trades: List[TwoLegTrade] = runQuery(sql).map { row =>
-      params.strat.toLowerCase match {
-        case "bullcalls" => new BullCall(row)
-        case "bearcalls" => new BearCall(row)
-        case "bullputs" => new BullPut(row)
-        case "bearputs" => new BearPut(row)
-        case "bullish" => if (row[String]("callOrPut").equalsIgnoreCase("C")) new BullCall(row) else new BullPut(row)
-        case "bearish" => if (row[String]("callOrPut").equalsIgnoreCase("C")) new BearCall(row) else new BearPut(row)
+      params.strat match {
+        case Strategy.BullCalls => new BullCall(row)
+        case Strategy.BearCalls => new BearCall(row)
+        case Strategy.BullPuts => new BullPut(row)
+        case Strategy.BearPuts => new BearPut(row)
+        case Strategy.AllBullish => if (row[String]("callOrPut").equalsIgnoreCase("C")) new BullCall(row) else new BullPut(row)
+        case Strategy.AllBearish => if (row[String]("callOrPut").equalsIgnoreCase("C")) new BearCall(row) else new BearPut(row)
       }
 	  }
 	  return trades
   }
   
-  def strikeClause(strat: String): String = {
-    val opr = strat.toLowerCase match {
-      case s if strat.startsWith("bull") => "<"
-      case s if strat.startsWith("bear") => ">"
+  def strikeClause(strat: Strategy): String = {
+    val opr = strat match {
+      case bullish if (strat.isBullish) => "<"
+      case bearish if (strat.isBearish) => ">"
       case _ => "!="  
     }
     return "longStrike " + opr + " shortStrike"
   }
   
-  def moneyClause(strat: String, moneyness: String): String = {
+  def moneyClause(strat: Strategy, moneyness: String): String = {
     moneyness.toLowerCase match {
-      case "itm" => if (strat.startsWith("bull")) "undLast > shortStrike" else "undLast < shortStrike"
-      case "otm" => if (strat.startsWith("bull")) "undLast < shortStrike" else "undLast > shortStrike"
+      case "itm" => if (strat.isBullish) "undLast > shortStrike" else "undLast < shortStrike"
+      case "otm" => if (strat.isBullish) "undLast < shortStrike" else "undLast > shortStrike"
       case "ntm" => "shortStrike BETWEEN (undLast*0.975) AND (undLast*1.025)"
       case _ => "shortStrike BETWEEN (undLast*0.75) AND (undLast*1.25)"
     }
@@ -86,9 +94,9 @@ object Screener extends Controller {
     DB.withConnection(implicit c => sql().toList)
   }
   
-  case class ScreenParams(strat: String, und: String, moneyness: Option[String]=None, minDays: Option[Int]=None, maxDays: Option[Int]=None) {
+  case class ScreenParams(strat: Strategy, und: String, moneyness: Option[String]=None, minDays: Option[Int]=None, maxDays: Option[Int]=None) {
     val cookies = Seq(
-        cookie("strat", strat), 
+        cookie("strat", strat.toString), 
         cookie("sym", und), 
         cookie("moneyness", moneyness.getOrElse("any")),
         cookie("minDays", minDays.getOrElse(0).toString),

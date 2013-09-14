@@ -5,26 +5,27 @@ import org.specs2.mutable._
 import play.api.test._
 import play.api.test.Helpers._
 import controllers.Screener.ScreenParams
+import models.Strategy._
 
 class ScreenerSpec extends Specification {
   
   "Screener" should {
     
 	  "create strike clause" in {
-			controllers.Screener.strikeClause("bullish") must equalTo("longStrike < shortStrike")
-			controllers.Screener.strikeClause("bullcalls") must equalTo("longStrike < shortStrike")
-			controllers.Screener.strikeClause("bullputs") must equalTo("longStrike < shortStrike")
-			controllers.Screener.strikeClause("bearish") must equalTo("longStrike > shortStrike")
-			controllers.Screener.strikeClause("bearcalls") must equalTo("longStrike > shortStrike")
-			controllers.Screener.strikeClause("bearputs") must equalTo("longStrike > shortStrike")
-			controllers.Screener.strikeClause("all") must equalTo("longStrike != shortStrike")
+			controllers.Screener.strikeClause(AllBullish) must equalTo("longStrike < shortStrike")
+			controllers.Screener.strikeClause(BullCalls) must equalTo("longStrike < shortStrike")
+			controllers.Screener.strikeClause(BullPuts) must equalTo("longStrike < shortStrike")
+			controllers.Screener.strikeClause(AllBearish) must equalTo("longStrike > shortStrike")
+			controllers.Screener.strikeClause(BearCalls) must equalTo("longStrike > shortStrike")
+			controllers.Screener.strikeClause(BearPuts) must equalTo("longStrike > shortStrike")
+			controllers.Screener.strikeClause(All) must equalTo("longStrike != shortStrike")
 	  }
       
       "create money clause" in {
         val anyClause = "shortStrike BETWEEN (undLast*0.75) AND (undLast*1.25)"
         val ntmClause = "shortStrike BETWEEN (undLast*0.975) AND (undLast*1.025)"
-        val bullStrats = List("bullish", "bullcalls", "bullputs")
-        val bearStrats = List("bearish", "bearcalls", "bearputs")
+        val bullStrats = List(AllBullish, BullCalls, BullPuts)
+        val bearStrats = List(AllBearish, BearCalls, BearPuts)
         
         bullStrats.foreach { strat =>
           controllers.Screener.moneyClause(strat, "itm") must equalTo("undLast > shortStrike")
@@ -48,7 +49,7 @@ class ScreenerSpec extends Specification {
       
       "return a list of trades" in {
         running(FakeApplication()) {
-          val params: ScreenParams = ScreenParams("bullcalls", "all", None, None, None)
+          val params: ScreenParams = ScreenParams(BullCalls, "all", None, None, None)
           val result = controllers.Screener.screen(params)
           result.size must beGreaterThan(0)
         }
