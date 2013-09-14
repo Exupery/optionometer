@@ -37,6 +37,7 @@ object Screener extends Controller {
   
   def screen(params: ScreenParams): List[TwoLegTrade] = {
 		val limit = 12	//TODO: adjust limit
+		//TODO add filters to params
 		val query = {
 		  "SELECT * FROM twolegs WHERE " +
 		  strikeClause(params.strat) + " AND " +
@@ -60,7 +61,7 @@ object Screener extends Controller {
         case Strategy.AllBearish => if (row[String]("callOrPut").equalsIgnoreCase("C")) new BearCall(row) else new BearPut(row)
       }
 	  }
-	  return trades
+	  return trades.filter(_.profitPercent > 0)
   }
   
   def strikeClause(strat: Strategy): String = {
@@ -97,7 +98,7 @@ object Screener extends Controller {
   case class ScreenParams(strat: Strategy, und: String, moneyness: Option[String]=None, minDays: Option[Int]=None, maxDays: Option[Int]=None) {
     val cookies = Seq(
         cookie("strat", strat.toString), 
-        cookie("sym", und), 
+        cookie("sym", if (und.equalsIgnoreCase("all")) "" else und.toUpperCase), 
         cookie("moneyness", moneyness.getOrElse("any")),
         cookie("minDays", minDays.getOrElse(0).toString),
         cookie("maxDays", maxDays.getOrElse(0).toString)

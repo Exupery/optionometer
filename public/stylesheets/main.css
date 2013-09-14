@@ -26,6 +26,10 @@ h1,
 .light-green {
 	color: #8CB18C;
 }
+i {
+	color: #808080;
+	font-size: 0.8em;
+}
 .margin-2 {
 	margin: 2em;
 }
@@ -44,6 +48,9 @@ h1,
 }
 form .row {
 	margin-bottom: 1.25em;
+}
+#sym-label span {
+	display: block;
 }
 #top-nav a {
 	color: #FFFFFF;	
