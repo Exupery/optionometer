@@ -44,10 +44,10 @@ object Screener extends Controller {
 		}
     val trades: List[TwoLegTrade] = runQuery(sql).map { row =>
       params.strat.toLowerCase match {
-        case "bullcall" => new BullCall(row)
-        case "bearcall" => new BearCall(row)
-        case "bullput" => new BullPut(row)
-        case "bearput" => new BearPut(row)
+        case "bullcalls" => new BullCall(row)
+        case "bearcalls" => new BearCall(row)
+        case "bullputs" => new BullPut(row)
+        case "bearputs" => new BearPut(row)
         case "bullish" => if (row[String]("callOrPut").equalsIgnoreCase("C")) new BullCall(row) else new BullPut(row)
         case "bearish" => if (row[String]("callOrPut").equalsIgnoreCase("C")) new BearCall(row) else new BearPut(row)
       }
