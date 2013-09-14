@@ -103,7 +103,7 @@ object Screener extends Controller {
         cookie("maxDays", maxDays.getOrElse(0).toString)
     )
     private def cookie(key: String, value: String): Cookie = {
-      Cookie(key, value, None, "/screener", None, false, false)
+      Cookie(key, value, None, routes.Screener.screenerNoParams.url, None, false, false)
     }
   }
 
