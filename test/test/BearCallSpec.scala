@@ -10,7 +10,7 @@ class BearCallSpec extends Specification {
   
   val trade = {
     running(FakeApplication()) {
-    	controllers.Screener.screen(ScreenParams("bearcall", "all"))(0)
+    	controllers.Screener.screen(ScreenParams("bearcalls", "all"))(0)
     }
   }
   

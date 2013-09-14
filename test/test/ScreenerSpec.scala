@@ -48,7 +48,7 @@ class ScreenerSpec extends Specification {
       
       "return a list of trades" in {
         running(FakeApplication()) {
-          val params: ScreenParams = ScreenParams("any", "all", None, None, None)
+          val params: ScreenParams = ScreenParams("bullcalls", "all", None, None, None)
           val result = controllers.Screener.screen(params)
           result.size must beGreaterThan(0)
         }

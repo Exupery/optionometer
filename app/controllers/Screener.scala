@@ -57,8 +57,8 @@ object Screener extends Controller {
   
   def strikeClause(strat: String): String = {
     val opr = strat.toLowerCase match {
-      case s if "bull.*".r.findFirstIn(s).isDefined => "<"
-      case s if "bear.*".r.findFirstIn(s).isDefined => ">"
+      case s if strat.startsWith("bull") => "<"
+      case s if strat.startsWith("bear") => ">"
       case _ => "!="  
     }
     return "longStrike " + opr + " shortStrike"

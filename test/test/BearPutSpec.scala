@@ -10,7 +10,7 @@ class BearPutSpec extends Specification {
 
   val trade = {
     running(FakeApplication()) {
-    	controllers.Screener.screen(ScreenParams("bearput", "all"))(0)
+    	controllers.Screener.screen(ScreenParams("bearputs", "all"))(0)
     }
   }
   
