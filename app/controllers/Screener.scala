@@ -10,7 +10,7 @@ import models._
 object Screener extends Controller {
   
   def screenerNoParams = Action {
-    Ok(views.html.screener())
+    Ok(views.html.screener()).withCookies(ScreenParams().cookies:_*)
   }
   
   def screenerWithParams(
@@ -35,21 +35,12 @@ object Screener extends Controller {
     println(strat,strat.ne(Strategy.All),strat.eq(Strategy.All))
     val strats = if (strat.ne(Strategy.All)) Set(strat) else Set(Strategy.AllBullish, Strategy.AllBearish)
     val trades = strats.foldLeft(List.empty[TwoLegTrade])((lst, strt) => lst ++ screen(params(strt)))
-//    val ztrades = if (strat.ne(Strategy.All)) {
-//      screen(ScreenParams(strat, und, moneyness, minDays, maxDays))
-//    } else {
-//      Set(Strategy.AllBullish, Strategy.AllBearish).foldLeft(List.empty[TwoLegTrade]) { (l, s) => 
-//        l ++ screen(ScreenParams(s, und, moneyness, minDays, maxDays))
-//      }
-//    }
     println(trades.size)			//DELME
     Ok(views.html.trades(trades)).withCookies(params(strat).cookies:_*)
   }
   
   def screen(params: ScreenParams): List[TwoLegTrade] = {
 		val limit = 10	//TODO: adjust limit (2000?)
-		//TODO add filters to params
-		//.filter(_.profitPercent > 0)
 		val query = {
 		  "SELECT * FROM twolegs WHERE " +
 		  strikeClause(params.strat) + " AND " +
@@ -73,7 +64,14 @@ object Screener extends Controller {
         case Strategy.AllBearish => if (row[String]("callOrPut").equalsIgnoreCase("C")) new BearCall(row) else new BearPut(row)
       }
 	  }
-	  return trades
+	  return filterResults(trades, params)
+  }
+  
+  def filterResults(trades: List[TwoLegTrade], params: ScreenParams): List[TwoLegTrade] = {
+    //TODO add filters to params
+    //.filter(_.profitPercent > 0)
+    
+    return trades
   }
   
   def strikeClause(strat: Strategy): String = {
@@ -108,8 +106,8 @@ object Screener extends Controller {
   }
   
   case class ScreenParams(
-      strat: Strategy, 
-      und: String, 
+      strat: Strategy=Strategy.All, 
+      und: String="all", 
       moneyness: Option[String]=None, 
       minDays: Option[Int]=None, 
       maxDays: Option[Int]=None,
