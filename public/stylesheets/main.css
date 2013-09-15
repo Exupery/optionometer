@@ -52,6 +52,14 @@ form .row {
 #sym-label span {
 	display: block;
 }
+#faq-list li {
+	font-weight: 700;
+	color: #134D13;
+}
+#faq-list li p {
+	font-weight: 600;
+	color: #000000;
+}
 #top-nav a {
 	color: #FFFFFF;	
 }
