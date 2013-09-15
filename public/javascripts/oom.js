@@ -14,50 +14,74 @@ $(document).ready(function() {
 function submitScreen(formId) {
 	var strat = $(formId + " #strat").val();
 	var sym = $(formId + " #sym").val();
-	var moneyness = $(formId + " #moneyness").val();
-	var mindays = $(formId + " #mindays").val();
-	var maxdays = $(formId + " #maxdays").val();
 	var href = "/screener/";
 	href += (sym != "all") ?  strat + "/" + sym : strat;
+	href += screenQueryString(formId);
+	window.location = href;
+}
+
+function screenQueryString(formId) {
+	var queryString = "";
+	var moneyness = $(formId + " #moneyness").val();
+	var numParams = {
+		mindays: $(formId + " #mindays").val(),
+		maxdays: $(formId + " #maxdays").val(),
+		minprofitpercent: $(formId + " #minprofitpercent").val(),
+		minprofitamount: $(formId + " #minprofitamount").val(),
+		maxlossamount: $(formId + " #maxlossamount").val(),
+	};
 	
 	var isFirstParam = true;
+	
 	if (moneyness != "any") {
-		href += (isFirstParam) ? "?" : "&";
-		href += "moneyness=" + moneyness;
+		queryString += (isFirstParam) ? "?" : "&";
+		queryString += "moneyness=" + moneyness;
 		isFirstParam = false;
 	}
 	
-	if (mindays > 0) {
-		href += (isFirstParam) ? "?" : "&";
-		href += "mindays=" + mindays;
-		isFirstParam = false;
+	for (var param in numParams) {
+		var value = numParams[param];
+		if (value) {
+			queryString += (isFirstParam) ? "?" : "&";
+			queryString += param + "=" + value;
+			isFirstParam = false;
+		}
 	}
 	
-	if (maxdays > 0) {
-		href += (isFirstParam) ? "?" : "&";
-		href += "maxdays=" + maxdays;
-		isFirstParam = false;
-	}
-	
-	window.location = href;
+	return queryString;
 }
 
 function updateScreenerInputs() {
 	var ck = $.cookie();
-	if (ck.strat) {
-		$("#strat").val(ck.strat);
+//	if (ck.strat) {
+//		$("#strat").val(ck.strat);
+//	}
+//	if (ck.sym) {
+//		$("#sym").val(ck.sym);
+//	}
+//	if (ck.moneyness) {
+//		$("#moneyness").val(ck.moneyness);
+//	}
+	var alphaParams = ["strat", "sym", "moneyness"];
+	for (var i in alphaParams) {
+		var key = alphaParams[i];
+		if (ck[key]) {
+			$("#"+key.toLowerCase()).val(ck[key]);
+		}
 	}
-	if (ck.sym) {
-		$("#sym").val(ck.sym);
-	}
-	if (ck.moneyness) {
-		$("#moneyness").val(ck.moneyness);
-	}
-	if (ck.minDays && ck.minDays > 0) {
-		$("#mindays").val(ck.minDays);
-	}
-	if (ck.maxDays && ck.maxDays > 0) {
-		$("#maxdays").val(ck.maxDays);
+	
+	var numericParams = [
+         "minDays", 
+         "maxDays", 
+         "minProfitAmount", 
+         "minProfitPercent", 
+         "maxLossAmount",
+    ];
+	for (var i in numericParams) {
+		var key = numericParams[i];
+		if (ck[key] && ck[key] > 0) {
+			$("#"+key.toLowerCase()).val(ck[key]);
+		}
 	}
 	
 }

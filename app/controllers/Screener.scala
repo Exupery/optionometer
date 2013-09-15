@@ -13,7 +13,15 @@ object Screener extends Controller {
     Ok(views.html.screener())
   }
   
-  def screenerWithParams(strategy: String, und: String, moneyness: Option[String], minDays: Option[Int], maxDays: Option[Int]) = Action {
+  def screenerWithParams(
+      strategy: String, 
+      und: String, 
+      moneyness: Option[String], 
+      minDays: Option[Int], 
+      maxDays: Option[Int],
+      minProfitPercent: Option[Int],
+      minProfitAmount: Option[Int],
+      maxLossAmount: Option[Int]) = Action {
     val strat = strategy match {
       case "bullcalls" => Strategy.BullCalls
       case "bearcalls" => Strategy.BearCalls
@@ -23,21 +31,25 @@ object Screener extends Controller {
       case "bearish" => Strategy.AllBearish
       case _ => Strategy.All
     }
-    val params = ScreenParams(strat, und, moneyness, minDays, maxDays)
-    val trades = if (strat.ne(Strategy.All)) {
-      screen(ScreenParams(strat, und, moneyness, minDays, maxDays))
-    } else {
-      Seq(Strategy.AllBullish, Strategy.AllBearish).foldLeft(List.empty[TwoLegTrade]) { (l, s) => 
-        l ++ screen(ScreenParams(s, und, moneyness, minDays, maxDays))
-      }
-    }
+    def params = ScreenParams(_: Strategy, und, moneyness, minDays, maxDays, minProfitPercent, minProfitAmount, maxLossAmount)
+    println(strat,strat.ne(Strategy.All),strat.eq(Strategy.All))
+    val strats = if (strat.ne(Strategy.All)) Set(strat) else Set(Strategy.AllBullish, Strategy.AllBearish)
+    val trades = strats.foldLeft(List.empty[TwoLegTrade])((lst, strt) => lst ++ screen(params(strt)))
+//    val ztrades = if (strat.ne(Strategy.All)) {
+//      screen(ScreenParams(strat, und, moneyness, minDays, maxDays))
+//    } else {
+//      Set(Strategy.AllBullish, Strategy.AllBearish).foldLeft(List.empty[TwoLegTrade]) { (l, s) => 
+//        l ++ screen(ScreenParams(s, und, moneyness, minDays, maxDays))
+//      }
+//    }
     println(trades.size)			//DELME
-    Ok(views.html.trades(trades)).withCookies(params.cookies:_*)
+    Ok(views.html.trades(trades)).withCookies(params(strat).cookies:_*)
   }
   
   def screen(params: ScreenParams): List[TwoLegTrade] = {
-		val limit = 12	//TODO: adjust limit
+		val limit = 10	//TODO: adjust limit (2000?)
 		//TODO add filters to params
+		//.filter(_.profitPercent > 0)
 		val query = {
 		  "SELECT * FROM twolegs WHERE " +
 		  strikeClause(params.strat) + " AND " +
@@ -61,7 +73,7 @@ object Screener extends Controller {
         case Strategy.AllBearish => if (row[String]("callOrPut").equalsIgnoreCase("C")) new BearCall(row) else new BearPut(row)
       }
 	  }
-	  return trades.filter(_.profitPercent > 0)
+	  return trades
   }
   
   def strikeClause(strat: Strategy): String = {
@@ -95,13 +107,25 @@ object Screener extends Controller {
     DB.withConnection(implicit c => sql().toList)
   }
   
-  case class ScreenParams(strat: Strategy, und: String, moneyness: Option[String]=None, minDays: Option[Int]=None, maxDays: Option[Int]=None) {
+  case class ScreenParams(
+      strat: Strategy, 
+      und: String, 
+      moneyness: Option[String]=None, 
+      minDays: Option[Int]=None, 
+      maxDays: Option[Int]=None,
+      minProfitPercent: Option[Int]=None,
+      minProfitAmount: Option[Int]=None,
+      maxLossAmount: Option[Int]=None) {
+    
     val cookies = Seq(
         cookie("strat", strat.toString), 
         cookie("sym", if (und.equalsIgnoreCase("all")) "" else und.toUpperCase), 
         cookie("moneyness", moneyness.getOrElse("any")),
         cookie("minDays", minDays.getOrElse(0).toString),
-        cookie("maxDays", maxDays.getOrElse(0).toString)
+        cookie("maxDays", maxDays.getOrElse(0).toString),
+        cookie("minProfitAmount", minProfitAmount.getOrElse(0).toString),
+        cookie("minProfitPercent", minProfitPercent.getOrElse(0).toString),
+        cookie("maxLossAmount", maxLossAmount.getOrElse(0).toString)
     )
     private def cookie(key: String, value: String): Cookie = {
       Cookie(key, value, None, routes.Screener.screenerNoParams.url, None, false, false)
