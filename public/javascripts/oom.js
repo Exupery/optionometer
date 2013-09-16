@@ -15,7 +15,7 @@ function submitScreen(formId) {
 	var strat = $(formId + " #strat").val();
 	var sym = $(formId + " #sym").val();
 	var href = "/screener/";
-	href += (sym != "all") ?  strat + "/" + sym : strat;
+	href += (sym && sym.length > 0) ?  strat + "/" + sym : strat;
 	href += screenQueryString(formId);
 	window.location = href;
 }

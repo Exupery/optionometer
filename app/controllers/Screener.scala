@@ -32,23 +32,24 @@ object Screener extends Controller {
       case _ => Strategy.All
     }
     def params = ScreenParams(_: Strategy, und, moneyness, minDays, maxDays, minProfitPercent, minProfitAmount, maxLossAmount)
-    println(strat,strat.ne(Strategy.All),strat.eq(Strategy.All))
     val strats = if (strat.ne(Strategy.All)) Set(strat) else Set(Strategy.AllBullish, Strategy.AllBearish)
-    val trades = strats.foldLeft(List.empty[TwoLegTrade])((lst, strt) => lst ++ screen(params(strt)))
-    println(trades.size)			//DELME
-    Ok(views.html.trades(trades)).withCookies(params(strat).cookies:_*)
+    val trades = {
+      strats.foldLeft(List.empty[TwoLegTrade])((lst, strt) => lst ++ screen(params(strt)))
+      .sortBy(_.profitPercent)(math.Ordering.BigDecimal.reverse)
+      .splitAt(250)
+    }
+    Logger.debug(trades._1.size+" "+trades._2.size)			//DELME
+    Ok(views.html.trades(trades._1)).withCookies(params(strat).cookies:_*)
   }
   
   def screen(params: ScreenParams): List[TwoLegTrade] = {
-		val limit = 10	//TODO: adjust limit (2000?)
+		val limit = 5000
 		val query = {
 		  "SELECT * FROM twolegs WHERE " +
 		  strikeClause(params.strat) + " AND " +
 		  moneyClause(params.strat, params.moneyness.getOrElse("any")) + " AND " + 
 		  daysClause(params.minDays, params.maxDays)
 		}
-		println(params)	//DELME 
-		println(query)	//DELME
 		val sql: SimpleSql[Row] = if (params.und.equalsIgnoreCase("all")) {
 		  SQL(query + " LIMIT {limit}").on("limit"->limit)
 		} else {
@@ -64,14 +65,23 @@ object Screener extends Controller {
         case Strategy.AllBearish => if (row[String]("callOrPut").equalsIgnoreCase("C")) new BearCall(row) else new BearPut(row)
       }
 	  }
-	  return filterResults(trades, params)
+    return filterResults(trades, params)
   }
   
   def filterResults(trades: List[TwoLegTrade], params: ScreenParams): List[TwoLegTrade] = {
-    //TODO add filters to params
-    //.filter(_.profitPercent > 0)
-    
-    return trades
+    val unrealisticPercent = BigDecimal(500)
+    val unrealisticPercentPerDay = BigDecimal(15)
+    val unrealisticDistancePercentPerDay = BigDecimal(7.5)
+    val minSensibleAmount = BigDecimal(0.05)
+    return trades.filter { trade =>
+      trade.maxLossAmount < BigDecimal(params.maxLossAmount.getOrElse(9999)) &&
+      trade.maxProfitAmount > BigDecimal(params.minProfitAmount.getOrElse(0)) &&
+      trade.profitPercent >= BigDecimal(params.minProfitPercent.getOrElse(0)) &&
+      trade.profitPercent < unrealisticPercent &&
+      trade.profitPercentPerDay < unrealisticPercentPerDay &&
+      trade.percentPerDayToMaxProfit < unrealisticDistancePercentPerDay &&
+      trade.maxProfitAmount > minSensibleAmount
+    }
   }
   
   def strikeClause(strat: Strategy): String = {
