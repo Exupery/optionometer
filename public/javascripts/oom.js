@@ -6,6 +6,7 @@ $(document).ready(function() {
 	});
 	
 	$(".table-sorted").tablesorter();
+	$(".table-sorted").oneSimpleTablePagination({rowsPerPage: 25});
 
 	updateScreenerInputs();
 
