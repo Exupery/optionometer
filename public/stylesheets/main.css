@@ -1,6 +1,9 @@
 html, body {
 	height: 100%;
 }
+h1 {
+	font-size: 44px;
+}
 h1,
 .jumbotron h1 {
 	color: #2E802E;
@@ -32,6 +35,9 @@ i {
 }
 .margin-2 {
 	margin: 2em;
+}
+.btn {
+	font-weight: bold;
 }
 .btn-primary {
 	background-color: #47A447;
@@ -135,59 +141,26 @@ th.headerSortDown {
 	padding-top: 0.25em;
 	padding-bottom: 1em;
 }
-a.button {
-	color: #FFFFFF;
-	text-decoration: none;
-	padding-top: 0.4em;
-	padding-bottom: 0.4em;
-	padding-left: 1em;
-	padding-right: 1em;
-	position: relative;
-	display: inline-block;
-	-webkit-transition: border-color .218s;
-	-moz-transition: border .218s;
-	-o-transition: border-color .218s;
-	transition: border-color .218s;
-	background: #2E802E;
-	background: -webkit-gradient(linear,0% 40%,0% 70%,from(#2E802E),to(#395C39));
-	background: -moz-linear-gradient(linear,0% 40%,0% 70%,from(#2E802E),to(#395C39));
-	border: solid 1px #16350C;
-	border-radius: 2px;
-	-webkit-border-radius: 2px;
-	-moz-border-radius: 2px;
+#tablePagination button {
+	min-width: 50px;
 }
-a.button:hover {
-	color: #000000;
-	border-color: #A6CAAC;
-	-moz-box-shadow: 0 2px 0 rgba(0, 0, 0, 0.2);
-	-webkit-box-shadow:0 2px 5px rgba(0, 0, 0, 0.2);
-	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
-}
-a.button:active {
-	color: #000000;
-	border-color: #444444;
-}
-a.left {
+#tablePaginationFirstPage,
+#tablePaginationNextPage {
 	-webkit-border-top-right-radius: 0;
 	-moz-border-radius-topright: 0;
 	border-top-right-radius: 0;
 	-webkit-border-bottom-right-radius: 0;
 	-moz-border-radius-bottomright: 0;
 	border-bottom-right-radius: 0;
-	margin: 0;
 }
-a.right:hover {
-	border-left: solid 1px #999999;
-}
-a.right {
+#tablePaginationPrevPage,
+#tablePaginationLastPage {
 	-webkit-border-top-left-radius: 0;
 	-moz-border-radius-topleft: 0;
 	border-top-left-radius: 0;
 	-webkit-border-bottom-left-radius: 0;
 	-moz-border-radius-bottomleft: 0;
-	border-bottom-left-radius: 0;
-	border-left: solid 1px #F3F3F3;
-	border-left: solid 1px rgba(255, 255, 255, 0);
+	border-bottom-left-radius: 0;	
 }
 #tablePaginationCurrPage {
 	margin-left: 0.5em;
@@ -202,4 +175,5 @@ a.right {
 	margin-left: 0.5em;
 	margin-right: 0.5em;
 	font-size: 1.15em;
+	vertical-align: middle;
 }
