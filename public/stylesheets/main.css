@@ -11,7 +11,7 @@ h1,
 .body-content {
 	min-height: 100%;
 	position: relative;
-	padding-bottom: 75px;
+	padding-bottom: 185px;
 }
 h1,
 .center {
@@ -134,6 +134,12 @@ th.headerSortDown {
 	padding-right: 0.2em;
 	padding-left: 0.1em;
 	color: #F0FFF0;
+}
+.adsense {
+	position: absolute;
+	bottom: 80px;
+	width: 100%;
+	text-align: center;
 }
 /* OneSimpleTablePaging */
 #tablePagination {
