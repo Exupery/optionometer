@@ -55,6 +55,12 @@ i {
 form .row {
 	margin-bottom: 1.25em;
 }
+form div {
+	vertical-align: bottom;
+}
+form .col-lg-2 {
+	width: 17.5%;
+}
 #sym-label span {
 	display: block;
 }
@@ -148,7 +154,8 @@ th.headerSortDown {
 	padding-bottom: 1em;
 }
 #tablePagination button {
-	min-width: 50px;
+	min-width: 3.5em;
+	min-height: 2.35em;
 }
 #tablePaginationFirstPage,
 #tablePaginationNextPage {
