@@ -31,6 +31,14 @@ abstract class TwoLegTrade(row: Row) {
   val percentPerDayToMaxLoss = twoDigit(if (daysToExpire != 0) percentToMaxLoss / daysToExpire else percentToMaxLoss)
   val percentPerDayToBreakeven = twoDigit(if (daysToExpire != 0) percentToBreakeven / daysToExpire else percentToBreakeven)
   
+  lazy val score: Double = {
+    //TODO score alg
+    //high profitPercentPerDay
+    //percentPerDayToMaxProfit (low for bull, high for bear)
+    //percentPerDayToMaxLoss (low for bull, high for bear)
+//    if (this.isInstanceOf[Bullish]) 1 else 0
+    0
+  }
   
   def maxProfitAmount: BigDecimal
   def maxLossAmount: BigDecimal
@@ -42,4 +50,14 @@ abstract class TwoLegTrade(row: Row) {
   
   def twoDigit(bigDec: BigDecimal): BigDecimal = bigDec.setScale(2, BigDecimal.RoundingMode.HALF_UP)
   
+  override def toString: String = {
+    "L:" + longSym + "\tS:" + shortSym + "\tundLast: " + undLast + "\tppd: " + profitPercentPerDay + 
+    "\tpercentPerDayToMaxProfit: "  + percentPerDayToMaxProfit +
+    "\tpercentPerDayToMaxLoss:" + percentPerDayToMaxLoss +
+    "\tscore" + score
+  }
+  
 }
+
+trait Bullish {}
+trait Bearish {}

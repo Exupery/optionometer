@@ -38,6 +38,7 @@ object Screener extends Controller {
       .sortBy(_.profitPercent)(math.Ordering.BigDecimal.reverse)
       .splitAt(250)
     }
+    trades._1.sortBy(_.score).foreach(println)					//DELME
     Logger.debug(trades._1.size+" "+trades._2.size)			//DELME
     Ok(views.html.trades(trades._1)).withCookies(params(strat).cookies:_*)
   }
