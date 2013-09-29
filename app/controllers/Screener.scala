@@ -35,7 +35,7 @@ object Screener extends Controller {
     val strats = if (strat.ne(Strategy.All)) Set(strat) else Set(Strategy.AllBullish, Strategy.AllBearish)
     val trades = {
       strats.foldLeft(List.empty[TwoLegTrade])((lst, strt) => lst ++ screen(params(strt)))
-      .sortBy(_.profitPercent)(math.Ordering.BigDecimal.reverse)
+      .sortBy(_.score)(Ordering.Double.reverse)
       .splitAt(250)
     }
     trades._1.sortBy(_.score).foreach(println)					//DELME
