@@ -36,9 +36,8 @@ object Screener extends Controller {
     val trades = {
       strats.foldLeft(List.empty[TwoLegTrade])((lst, strt) => lst ++ screen(params(strt)))
       .sortBy(_.score)(Ordering.Double.reverse)
-      .splitAt(250)
+      .splitAt(500)
     }
-    trades._1.sortBy(_.score).foreach(println)					//DELME
     Logger.debug(trades._1.size+" "+trades._2.size)			//DELME
     Ok(views.html.trades(trades._1)).withCookies(params(strat).cookies:_*)
   }
