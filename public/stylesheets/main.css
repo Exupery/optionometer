@@ -141,6 +141,11 @@ th.headerSortDown {
 	padding-left: 0.1em;
 	color: #F0FFF0;
 }
+.popover {
+	border-radius: 0px;
+	background-color: #8CB18C;
+	padding: 0px;
+}
 .adsense {
 	position: absolute;
 	bottom: 80px;

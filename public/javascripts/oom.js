@@ -7,6 +7,7 @@ $(document).ready(function() {
 	
 	$(".table-sorted").tablesorter();
 	$(".table-sorted").oneSimpleTablePagination({rowsPerPage: 25});
+	$(".table-sorted .strat-desc").popover({placement: "bottom", trigger: "hover"});
 
 	updateScreenerInputs();
 

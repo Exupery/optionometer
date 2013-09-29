@@ -26,14 +26,15 @@
 			<td>@trade.profitPercent<span class="s">%</span></td>
 			<td>@trade.profitPercentPerDay<span class="s">%</span></td>
 			<td>@trade.daysToExpire</td>
-			@defining(trade match {
+			<td>@defining(trade match {
 				case t: BullCall => ("Bull Call", "Buy calls and sell an equal amount of calls with a higher strike")
 				case t: BearCall => ("Bear Call", "Sell calls and buy an equal amount of calls with a higher strike")
 				case t: BullPut => ("Bull Put", "Sell puts and buy an equal amount of puts with a lower strike")
 				case t: BearPut => ("Bear Put", "Buy puts and sell an equal amount of puts with a lower strike")
 			}) { case (strat, desc) => 
-			<td title="@desc">@strat</td>
-			}					
+				<span class="strat-desc" data-content="@desc">@strat</span>
+			}
+			</td>					
 		</tr>
 	}
 	</tbody>
