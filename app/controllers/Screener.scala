@@ -43,8 +43,8 @@ object Screener extends Controller {
   }
   
   def screen(params: ScreenParams): List[TwoLegTrade] = {
-//    Logger.debug("SCREEN START") //DELME
-		val limit = 7500
+    Logger.debug("SCREEN START") //DELME
+		val limit = 4500
 		val query = {
 		  "SELECT * FROM twolegs WHERE " +
 		  "longBid > 0.05 AND shortAsk > 0.05 AND " +
@@ -67,7 +67,7 @@ object Screener extends Controller {
         case Strategy.AllBearish => if (row[String]("callOrPut").equalsIgnoreCase("C")) new BearCall(row) else new BearPut(row)
       }
 	  }
-//		Logger.debug("SCREEN COMPLETE") //DELME
+		Logger.debug("SCREEN COMPLETE") //DELME
     return filterResults(trades, params)
   }
   
