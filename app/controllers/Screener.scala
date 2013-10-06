@@ -43,9 +43,11 @@ object Screener extends Controller {
   }
   
   def screen(params: ScreenParams): List[TwoLegTrade] = {
-		val limit = 5000
+//    Logger.debug("SCREEN START") //DELME
+		val limit = 7500
 		val query = {
 		  "SELECT * FROM twolegs WHERE " +
+		  "longBid > 0.05 AND shortAsk > 0.05 AND " +
 		  strikeClause(params.strat) + " AND " +
 		  moneyClause(params.strat, params.moneyness.getOrElse("any")) + " AND " + 
 		  daysClause(params.minDays, params.maxDays)
@@ -65,6 +67,7 @@ object Screener extends Controller {
         case Strategy.AllBearish => if (row[String]("callOrPut").equalsIgnoreCase("C")) new BearCall(row) else new BearPut(row)
       }
 	  }
+//		Logger.debug("SCREEN COMPLETE") //DELME
     return filterResults(trades, params)
   }
   
@@ -97,15 +100,15 @@ object Screener extends Controller {
     moneyness.toLowerCase match {
       case "itm" => if (strat.isBullish) "undLast > shortStrike" else "undLast < shortStrike"
       case "otm" => if (strat.isBullish) "undLast < shortStrike" else "undLast > shortStrike"
-      case "ntm" => "shortStrike BETWEEN (undLast*0.975) AND (undLast*1.025)"
-      case _ => "shortStrike BETWEEN (undLast*0.75) AND (undLast*1.25)"
+      case "ntm" => "shortStrike BETWEEN (undLast*0.99) AND (undLast*1.01)"
+      case _ => "shortStrike BETWEEN (undLast*0.95) AND (undLast*1.05)"
     }
   }
   
   def daysClause(minDays: Option[Int], maxDays: Option[Int]): String = {
     val secondsInDay = 24 * 60 * 60
     val minSec = minDays.getOrElse(0) * secondsInDay
-    val maxSec = maxDays.getOrElse(999) * secondsInDay
+    val maxSec = maxDays.getOrElse(365) * secondsInDay
     val minExp = (System.currentTimeMillis / 1000) + minSec
     val maxExp = (System.currentTimeMillis / 1000) + maxSec
     return "expires BETWEEN " + minExp + " AND " + maxExp
