@@ -2,6 +2,8 @@ package models
 
 import anorm._
 import java.math.{BigDecimal => JBD}
+import java.text.SimpleDateFormat
+import java.util.Date
 
 abstract class TwoLegTrade(row: Row) {
   
@@ -18,6 +20,10 @@ abstract class TwoLegTrade(row: Row) {
   
   val expires = row[Long]("expires")
   val daysToExpire: Int = ((expires - (System.currentTimeMillis / 1000)) / (60 * 60 *24)).toInt
+  val expMonthYear = {
+    val df = new SimpleDateFormat("dd MMM yyyy")
+    df.format(new Date(expires * 1000))
+  }
   
   val profitPercent = twoDigit(if (maxLossAmount != 0) maxProfitAmount / maxLossAmount * 100 else 0)
   val profitPercentPerDay = twoDigit(if (daysToExpire != 0) profitPercent / daysToExpire else profitPercent)
