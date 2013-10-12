@@ -113,17 +113,20 @@ td {
 }
 .table-dark {
 	color: #FFFFFF;
-	background-color: #080808;
+	background-color: #222222;
 }
 .table-dark th {
 	background-color: #004E00;
 	text-align: center;
 }
+.table-dark tbody>tr>td {
+	border-top: 1px solid #D6E0D8;
+}
 .table-striped>tbody>tr:nth-child(odd)>td {
-	background-color: #080808;
+	background-color: #0F1410;
 }
 .table-striped>tbody>tr:nth-child(even)>td {
-	background-color: #3D3D3D;
+	background-color: #435044;
 }
 .table-sorted th:hover,
 .table-hover>tbody>tr:hover>td {
