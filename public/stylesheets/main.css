@@ -39,7 +39,8 @@ i {
 .btn {
 	font-weight: bold;
 }
-.btn-primary {
+.btn-primary,
+.btn-primary:focus {
 	background-color: #47A447;
 	border-color: #398439;
 }
