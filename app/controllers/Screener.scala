@@ -57,7 +57,11 @@ object Screener extends Controller {
 		} else {
 		  SQL(query+" AND underlier={underlier} LIMIT {limit}").on("underlier"->params.und, "limit"->limit)
 		}
-    val trades: List[TwoLegTrade] = runQuery(sql).map { row =>
+		println(query)	//DELME
+		Logger.debug("QUERY START") //DELME
+		val results = runQuery(sql)
+		Logger.debug("QUERY COMPLETE") //DELME
+    val trades: List[TwoLegTrade] = results.map { row =>
       params.strat match {
         case Strategy.BullCalls => new BullCall(row)
         case Strategy.BearCalls => new BearCall(row)
