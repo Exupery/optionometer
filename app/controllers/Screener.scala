@@ -43,11 +43,10 @@ object Screener extends Controller {
   }
   
   def screen(params: ScreenParams): List[TwoLegTrade] = {
-    Logger.debug("SCREEN START") //DELME
-		val limit = 4500
+    Logger.debug("*** SCREEN START ***") //DELME
+		val limit = if (params.und.equalsIgnoreCase("all")) 2000 else	4000
 		val query = {
 		  "SELECT * FROM twolegs WHERE " +
-		  "longBid > 0.05 AND shortAsk > 0.05 AND " +
 		  strikeClause(params.strat) + " AND " +
 		  moneyClause(params.strat, params.moneyness.getOrElse("any")) + " AND " + 
 		  daysClause(params.minDays, params.maxDays)
@@ -57,11 +56,7 @@ object Screener extends Controller {
 		} else {
 		  SQL(query+" AND underlier={underlier} LIMIT {limit}").on("underlier"->params.und, "limit"->limit)
 		}
-		println(query)	//DELME
-		Logger.debug("QUERY START") //DELME
-		val results = runQuery(sql)
-		Logger.debug("QUERY COMPLETE") //DELME
-    val trades: List[TwoLegTrade] = results.map { row =>
+    val trades: List[TwoLegTrade] = runQuery(sql).map { row =>
       params.strat match {
         case Strategy.BullCalls => new BullCall(row)
         case Strategy.BearCalls => new BearCall(row)
@@ -71,7 +66,7 @@ object Screener extends Controller {
         case Strategy.AllBearish => if (row[String]("callOrPut").equalsIgnoreCase("C")) new BearCall(row) else new BearPut(row)
       }
 	  }
-		Logger.debug("SCREEN COMPLETE") //DELME
+		Logger.debug("*** SCREEN COMPLETE ***") //DELME
     return filterResults(trades, params)
   }
   
@@ -105,7 +100,7 @@ object Screener extends Controller {
       case "itm" => if (strat.isBullish) "undLast > shortStrike" else "undLast < shortStrike"
       case "otm" => if (strat.isBullish) "undLast < shortStrike" else "undLast > shortStrike"
       case "ntm" => "shortStrike BETWEEN (undLast*0.99) AND (undLast*1.01)"
-      case _ => "shortStrike BETWEEN (undLast*0.95) AND (undLast*1.05)"
+      case _ => "shortStrike BETWEEN (undLast*0.96) AND (undLast*1.04)"
     }
   }
   
