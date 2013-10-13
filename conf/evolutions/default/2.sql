@@ -22,6 +22,8 @@ CREATE TABLE `options` (
   KEY `underlier_strike_COMPOUND` (`underlier`,`strike`),
   KEY `expiry_COMPOUND` (`exp_year`,`exp_month`,`exp_day`),
   KEY `callput_INDEX` (`call_or_put`),
+  KEY `bid_INDEX` (`bid`),
+  KEY `ask_INDEX` (`ask`),
   KEY `expiry_time_INDEX` (`exp_unixtime`),
   KEY `dbupdate_INDEX` (`dbupdate_time`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8
