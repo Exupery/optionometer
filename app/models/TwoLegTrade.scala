@@ -25,6 +25,7 @@ abstract class TwoLegTrade(row: Row) {
     df.format(new Date(expires * 1000))
   }
   
+  val comparator: String = underlier + longStrike + shortStrike + expires + row[String]("callOrPut")
   val profitPercent = twoDigit(if (maxLossAmount != 0) maxProfitAmount / maxLossAmount * 100 else 0)
   val profitPercentPerDay = twoDigit(if (daysToExpire != 0) profitPercent / daysToExpire else profitPercent)
   val amountToMaxProfit = maxProfitPrice - undLast
@@ -52,10 +53,15 @@ abstract class TwoLegTrade(row: Row) {
   
   def twoDigit(bigDec: BigDecimal): BigDecimal = bigDec.setScale(2, BigDecimal.RoundingMode.HALF_UP)
   
-  override def toString: String = {
-    "L:" + longSym + "\tS:" + shortSym + "\tundLast: " + undLast + "\tppd: " + profitPercentPerDay + 
-    "\tpercentPerDayToMaxProfit: "  + percentPerDayToMaxProfit +
-    "\tscore: " + score
+  override def toString: String = "L:" + longSym + "\tS:" + shortSym + "\tlast: " + undLast + "\tscore: " + score
+  
+  override def hashCode: Int = comparator.hashCode
+  
+  override def equals(that: Any): Boolean = {
+    that match {
+      case tlt: TwoLegTrade => comparator.equalsIgnoreCase(tlt.comparator)
+      case _ => false
+    }
   }
   
 }

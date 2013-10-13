@@ -22,7 +22,7 @@ class ScreenerSpec extends Specification {
 	  }
       
       "create money clause" in {
-        val anyClause = "shortStrike BETWEEN (undLast*0.95) AND (undLast*1.05)"
+        val anyClause = "shortStrike BETWEEN (undLast*0.96) AND (undLast*1.04)"
         val ntmClause = "shortStrike BETWEEN (undLast*0.99) AND (undLast*1.01)"
         val bullStrats = List(AllBullish, BullCalls, BullPuts)
         val bearStrats = List(AllBearish, BearCalls, BearPuts)

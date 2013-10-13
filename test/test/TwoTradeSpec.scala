@@ -11,7 +11,7 @@ class TwoTradeSpec extends Specification {
   
   val trade = {
     running(FakeApplication()) {
-    	controllers.Screener.screen(ScreenParams(Strategy.BullCalls, "all"))(0)
+    	controllers.Screener.screen(ScreenParams(Strategy.BullCalls, "all")).toList(0)
     }
   }
   

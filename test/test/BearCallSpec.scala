@@ -11,7 +11,7 @@ class BearCallSpec extends Specification {
   
   val trade = {
     running(FakeApplication()) {
-    	controllers.Screener.screen(ScreenParams(Strategy.BearCalls, "all"))(0)
+    	controllers.Screener.screen(ScreenParams(Strategy.BearCalls, "all")).toList(0)
     }
   }
   

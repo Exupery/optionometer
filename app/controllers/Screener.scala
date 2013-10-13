@@ -42,7 +42,7 @@ object Screener extends Controller {
     Ok(views.html.trades(trades._1)).withCookies(params(strat).cookies:_*)
   }
   
-  def screen(params: ScreenParams): List[TwoLegTrade] = {
+  def screen(params: ScreenParams): Set[TwoLegTrade] = {
     Logger.debug("*** SCREEN START ***") //DELME
 		val limit = if (params.und.equalsIgnoreCase("all")) 2000 else	4000
 		val query = {
@@ -70,7 +70,7 @@ object Screener extends Controller {
     return filterResults(trades, params)
   }
   
-  def filterResults(trades: List[TwoLegTrade], params: ScreenParams): List[TwoLegTrade] = {
+  def filterResults(trades: List[TwoLegTrade], params: ScreenParams): Set[TwoLegTrade] = {
     val unrealisticPercent = BigDecimal(500)
     val unrealisticPercentPerDay = BigDecimal(15)
     val unrealisticDistancePercentPerDay = BigDecimal(7.5)
@@ -83,7 +83,7 @@ object Screener extends Controller {
       trade.profitPercentPerDay < unrealisticPercentPerDay &&
       trade.percentPerDayToMaxProfit < unrealisticDistancePercentPerDay &&
       trade.maxProfitAmount > minSensibleAmount
-    }
+    }.toSet
   }
   
   def strikeClause(strat: Strategy): String = {

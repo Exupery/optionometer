@@ -11,7 +11,7 @@ class BearPutSpec extends Specification {
 
   val trade = {
     running(FakeApplication()) {
-    	controllers.Screener.screen(ScreenParams(Strategy.BearPuts, "all"))(0)
+    	controllers.Screener.screen(ScreenParams(Strategy.BearPuts, "all")).toList(0)
     }
   }
   
