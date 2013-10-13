@@ -5,10 +5,10 @@ $(document).ready(function() {
 		return false;
 	});
 	
-	$(".table-sorted").tablesorter();
+	$(".table-sorted").tablesorter({sortInitialOrder: "desc"});
 	$(".table-sorted").oneSimpleTablePagination({rowsPerPage: 25});
 	$(".table-sorted .hovertip").popover({placement: "bottom", trigger: "hover"});
-
+	
 	updateScreenerInputs();
 
 });
@@ -55,15 +55,6 @@ function screenQueryString(formId) {
 
 function updateScreenerInputs() {
 	var ck = $.cookie();
-//	if (ck.strat) {
-//		$("#strat").val(ck.strat);
-//	}
-//	if (ck.sym) {
-//		$("#sym").val(ck.sym);
-//	}
-//	if (ck.moneyness) {
-//		$("#moneyness").val(ck.moneyness);
-//	}
 	var alphaParams = ["strat", "sym", "moneyness"];
 	for (var i in alphaParams) {
 		var key = alphaParams[i];

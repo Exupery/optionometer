@@ -75,11 +75,13 @@ $.prototype.extend(
 		  
 				hideOtherPages(currPageNumber);
 				
-				$("th").click(function() {
+				window.addEventListener("sortComplete", sorted, false);
+				
+				function sorted() {
 					setTimeout(function() {
 						resetCurrentPage(1);
-					}, 15);
-				});
+					}, 0);
+				}
 				
 				$(table)[tblLocation]().find("#tablePaginationFirstPage").click(function (e) {
 					resetCurrentPage(1);
