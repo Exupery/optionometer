@@ -4,7 +4,7 @@
 
 CREATE TABLE `stocks` (
   `symbol` varchar(8) NOT NULL,
-  `last_trade` decimal(10,4) DEFAULT '0.0000',
+  `last_trade` decimal(10,4) NOT NULL DEFAULT '0.0000',
   `last_trade_time` bigint(20) DEFAULT '0',
   `dbupdate_time` bigint(20) DEFAULT '0',
   PRIMARY KEY (`symbol`),
