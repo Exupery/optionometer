@@ -2,7 +2,7 @@
 
 # --- !Ups
 
-CREATE VIEW `twolegs` AS SELECT l.underlier, stocks.last_trade AS undLast, 
+CREATE VIEW "twolegs" AS SELECT l.underlier, stocks.last_trade AS undLast, 
 l.exp_unixtime AS expires, l.symbol AS longSym, l.bid AS longBid, l.call_or_put AS callOrPut, 
 l.ask AS longAsk, l.strike AS longStrike, s.symbol AS shortSym, s.bid AS shortBid, 
 s.ask AS shortAsk, s.strike AS shortStrike
@@ -14,4 +14,4 @@ AND s.strike BETWEEN (stocks.last_trade*0.95) AND (stocks.last_trade*1.05)
 
 # --- !Downs
 
-DROP VIEW `twolegs`;
+DROP VIEW "twolegs";
