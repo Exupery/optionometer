@@ -80,7 +80,7 @@ $.prototype.extend(
 				function sorted() {
 					setTimeout(function() {
 						resetCurrentPage(1);
-					}, 0);
+					}, 1);
 				}
 				
 				$(table)[tblLocation]().find("#tablePaginationFirstPage").click(function (e) {
