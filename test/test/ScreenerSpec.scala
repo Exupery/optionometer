@@ -49,9 +49,12 @@ class ScreenerSpec extends Specification {
       
       "return a list of trades" in {
         running(FakeApplication()) {
-          val params: ScreenParams = ScreenParams(BullCalls, "all", None, None, None)
-          val result = controllers.Screener.screen(params)
-          result.size must beGreaterThan(0)
+          val underliers = List(Seq("all"), Seq("MSFT"), Seq("MSFT", "INTC"))
+          underliers.foreach { unds =>
+	          val params: ScreenParams = ScreenParams(BullCalls, unds, None, None, None)
+	          val result = controllers.Screener.screen(params)
+	          result.size must beGreaterThan(0)
+          }
         }
       }
   }

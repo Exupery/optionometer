@@ -15,7 +15,7 @@ object Screener extends Controller {
   
   def screenerWithParams(
       strategy: String, 
-      und: String, 
+      unds: String, 
       moneyness: Option[String], 
       minDays: Option[Int], 
       maxDays: Option[Int],
@@ -31,7 +31,7 @@ object Screener extends Controller {
       case "bearish" => Strategy.AllBearish
       case _ => Strategy.All
     }
-    def params = ScreenParams(_: Strategy, und, moneyness, minDays, maxDays, minProfitPercent, minProfitAmount, maxLossAmount)
+    def params = ScreenParams(_: Strategy, unds.split("[, ]"), moneyness, minDays, maxDays, minProfitPercent, minProfitAmount, maxLossAmount)
     val strats = if (strat.ne(Strategy.All)) Set(strat) else Set(Strategy.AllBullish, Strategy.AllBearish)
     val trades = {
       strats.foldLeft(List.empty[TwoLegTrade])((lst, strt) => lst ++ screen(params(strt)))
@@ -44,28 +44,31 @@ object Screener extends Controller {
   
   def screen(params: ScreenParams): Set[TwoLegTrade] = {
     Logger.debug("*** SCREEN START ***") //DELME
-		val limit = if (params.und.equalsIgnoreCase("all")) 2000 else	4000
+		val limit = if (params.isAll) 2000 else if (params.underliers.size<10) 4000 else 1000
 		val query = {
 		  "SELECT * FROM twolegs WHERE " +
 		  strikeClause(params.strat) + " AND " +
 		  moneyClause(params.strat, params.moneyness.getOrElse("any")) + " AND " + 
 		  daysClause(params.minDays, params.maxDays)
 		}
-		val sql: SimpleSql[Row] = if (params.und.equalsIgnoreCase("all")) {
-		  SQL(query + " LIMIT {limit}").on("limit"->limit)
-		} else {
-		  SQL(query+" AND underlier={underlier} LIMIT {limit}").on("underlier"->params.und, "limit"->limit)
-		}
-    val trades: List[TwoLegTrade] = runQuery(sql).map { row =>
-      params.strat match {
-        case Strategy.BullCalls => new BullCall(row)
-        case Strategy.BearCalls => new BearCall(row)
-        case Strategy.BullPuts => new BullPut(row)
-        case Strategy.BearPuts => new BearPut(row)
-        case Strategy.AllBullish => if (row[String]("callOrPut").equalsIgnoreCase("C")) new BullCall(row) else new BullPut(row)
-        case Strategy.AllBearish => if (row[String]("callOrPut").equalsIgnoreCase("C")) new BearCall(row) else new BearPut(row)
-      }
-	  }
+    //Iterating through underliers due to anorm's lack of SQL IN support
+    val trades: List[TwoLegTrade] = params.underliers.foldLeft(List.empty[TwoLegTrade]) { (trades, und) =>
+			val sql: SimpleSql[Row] = if (params.isAll) {
+			  SQL(query + " LIMIT {limit}").on("limit"->limit)
+			} else {
+			  SQL(query+" AND underlier={underlier} LIMIT {limit}").on("underlier"->und.toUpperCase, "limit"->limit)
+			}
+	    trades ++ runQuery(sql).map { row =>
+	      params.strat match {
+	        case Strategy.BullCalls => new BullCall(row)
+	        case Strategy.BearCalls => new BearCall(row)
+	        case Strategy.BullPuts => new BullPut(row)
+	        case Strategy.BearPuts => new BearPut(row)
+	        case Strategy.AllBullish => if (row[String]("callOrPut").equalsIgnoreCase("C")) new BullCall(row) else new BullPut(row)
+	        case Strategy.AllBearish => if (row[String]("callOrPut").equalsIgnoreCase("C")) new BearCall(row) else new BearPut(row)
+	      }
+		  }
+    }
 		Logger.debug("*** SCREEN COMPLETE ***") //DELME
     return filterResults(trades, params)
   }
@@ -119,7 +122,7 @@ object Screener extends Controller {
   
   case class ScreenParams(
       strat: Strategy=Strategy.All, 
-      und: String="all", 
+      underliers: Seq[String]=Seq("all"), 
       moneyness: Option[String]=None, 
       minDays: Option[Int]=None, 
       maxDays: Option[Int]=None,
@@ -127,9 +130,11 @@ object Screener extends Controller {
       minProfitAmount: Option[Int]=None,
       maxLossAmount: Option[Int]=None) {
     
+    val isAll = underliers.isEmpty || (underliers.size == 1 && underliers(0).equalsIgnoreCase("all"))
+    
     val cookies = Seq(
         cookie("strat", strat.toString), 
-        cookie("sym", if (und.equalsIgnoreCase("all")) "" else und.toUpperCase), 
+        cookie("sym", if (isAll) "" else underliers.mkString(" ").toUpperCase),
         cookie("moneyness", moneyness.getOrElse("any")),
         cookie("minDays", minDays.getOrElse(0).toString),
         cookie("maxDays", maxDays.getOrElse(0).toString),

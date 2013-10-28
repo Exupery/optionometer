@@ -11,7 +11,7 @@ class BullCallSpec extends Specification {
   
   val trade = {
     running(FakeApplication()) {
-    	controllers.Screener.screen(ScreenParams(Strategy.BullCalls, "all")).toList(0)
+    	controllers.Screener.screen(ScreenParams(Strategy.BullCalls)).toList(0)
     }
   }
   
