@@ -1,6 +1,10 @@
 $(document).ready(function() {
 	
 	$("#screener-full").submit(function() {
+		window.scrollTo(0, 0);
+		Pace.restart();
+		$("#screener-full :input").attr("readonly", true);
+		$("#screener-full :input").attr("disabled", true);
 		submitScreen("#"+this.id);
 		return false;
 	});

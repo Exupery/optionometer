@@ -1,5 +1,9 @@
 @(trades: List[TwoLegTrade])
 @main("Screener") {
+@if(trades.isEmpty) {
+<h1>No trades found matching criteria</h1>
+} else {
 @partials.screener.traderesults(trades)
+}
 @partials.screener.fullscreenerform()
 }
