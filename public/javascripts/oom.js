@@ -14,6 +14,18 @@ $(document).ready(function() {
 	$(".table-sorted .hovertip").popover({placement: "bottom", trigger: "hover"});
 	
 	updateScreenerInputs();
+	
+	$("body").keydown(function(e) {
+		var focusTag = document.activeElement.tagName;
+		if (focusTag!="INPUT" && focusTag!="BUTTON") {
+			var key = e.keyCode;
+			if (key==37 || key==74) {
+				$("#tablePaginationPrevPage").click();
+			} else if (key==39 || key==75) {
+				$("#tablePaginationNextPage").click();
+			}
+		}
+	});
 
 });
 
