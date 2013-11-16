@@ -17,7 +17,7 @@ $(document).ready(function() {
 	
 	$("body").keydown(function(e) {
 		var focusTag = document.activeElement.tagName;
-		if (focusTag!="INPUT" && focusTag!="BUTTON") {
+		if (focusTag != "INPUT") {
 			var key = e.keyCode;
 			if (key==37 || key==74) {
 				$("#tablePaginationPrevPage").click();
