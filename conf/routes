@@ -2,16 +2,19 @@
 # This file defines all application routes (Higher priority routes first)
 # ~~~~
 
-GET     /                           controllers.Application.index
-GET		/*path/						controllers.Application.removeTrailing(path)
-GET     /screener                   controllers.Screener.screenerNoParams
-GET     /screener/:strat			controllers.Screener.screenerWithParams(strat, sym="all", moneyness: Option[String] ?= None, mindays: Option[Int] ?= None, maxdays: Option[Int] ?= None, minprofitpercent: Option[Int] ?= None, minprofitamount: Option[Int] ?= None, maxlossamount: Option[Int] ?= None)
-GET     /screener/:strat/:sym		controllers.Screener.screenerWithParams(strat, sym, moneyness: Option[String] ?= None, mindays: Option[Int] ?= None, maxdays: Option[Int] ?= None, minprofitpercent: Option[Int] ?= None, minprofitamount: Option[Int] ?= None, maxlossamount: Option[Int] ?= None)
-GET     /disclaimer                 controllers.Application.disclaimer
-GET     /faq		                controllers.Application.faq
-GET     /privacy	                controllers.Application.privacy
-GET     /recommendations            controllers.Application.recommendations
-GET     /tos		                controllers.Application.tos
+GET  /                          	controllers.Application.index
+GET  /*path/						controllers.Application.removeTrailing(path)
+GET  /screener                   	controllers.Screener.screenerNoParams
+GET  /screener/:strat				controllers.Screener.screenerWithParams(strat, sym="all", moneyness: Option[String] ?= None, mindays: Option[Int] ?= None, maxdays: Option[Int] ?= None, minprofitpercent: Option[Int] ?= None, minprofitamount: Option[Int] ?= None, maxlossamount: Option[Int] ?= None)
+GET  /screener/:strat/:sym			controllers.Screener.screenerWithParams(strat, sym, moneyness: Option[String] ?= None, mindays: Option[Int] ?= None, maxdays: Option[Int] ?= None, minprofitpercent: Option[Int] ?= None, minprofitamount: Option[Int] ?= None, maxlossamount: Option[Int] ?= None)
+GET  /trades						controllers.Trades.tradesNoParams(sym="all")
+GET  /trades/:sym					controllers.Trades.tradesNoParams(sym)
+GET  /trades/:sym/:y/:m/:l1/:l2		controllers.Trades.trades(sym, y, m, l1, l2)
+GET  /disclaimer                 	controllers.Application.disclaimer
+GET  /faq		                	controllers.Application.faq
+GET  /privacy	                	controllers.Application.privacy
+GET  /recommendations            	controllers.Application.recommendations
+GET  /tos		                	controllers.Application.tos
 
-GET     /assets/*file               controllers.Assets.at(path="/public", file)
-GET     /robots.txt			        controllers.Assets.at(path="/public", file="robots.txt")
+GET  /assets/*file               	controllers.Assets.at(path="/public", file)
+GET  /robots.txt			        controllers.Assets.at(path="/public", file="robots.txt")
