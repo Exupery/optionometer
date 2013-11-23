@@ -6,19 +6,35 @@ import play.api._
 import play.api.Play.current
 import play.api.db.DB
 import play.api.mvc._
+import com.github.nscala_time.time.Imports._
 import models._
 
-object Trades extends Controller {
+object Trades extends Controller with SafeCast {
   
-  def tradesNoParams(und: String) = Action {
-    Redirect(routes.Screener.screenerWithParams("all", und, None, None, None, None, None, None))
+  def tradesNoLegs(und: String, year: String, month: String) = Action {
+    val days = minMaxDays(safeInt(year), safeInt(month))
+    Redirect(routes.Screener.screener("all", und, None, days._1, days._2, None, None, None))
   }
   
-  def trades(
-      und: String,
-      year: String,
-      month: String,
-      legs: String) = Action {
+  def minMaxDays(year: Int, month: Int): (Option[Int], Option[Int]) = {
+    val now = DateTime.now
+    val curYear = now.getYear
+    val year4d = if (year < 100) year + 2000 else year
+    val minMax = if (year4d > curYear || (year4d == curYear && (month >= now.getMonthOfYear) || month == 0)) {
+      val startMonth = if (month > 0 && month <= 12) month else (if (year4d == curYear) now.getMonthOfYear else 1)
+      val expRangeStart = new DateTime(year4d, startMonth, 1, 0, 0)
+      val expRangeEnd = if (month > 0 && month <= 12) expRangeStart.plusMonths(1) else new DateTime(year4d, 12, 31, 0, 0)
+      val millisInDay = 1000 * 60 * 60 * 24
+      val minDays = (expRangeStart.millis - now.millis) / millisInDay 
+    	val maxDays = (expRangeEnd.millis - now.millis) / millisInDay
+    	(Some(minDays.toInt), Some(maxDays.toInt))
+    } else {
+      (None, None)
+    }
+    return minMax
+  }
+  
+  def trades(und: String, year: String, month: String, legs: String) = Action {
     //MSFT/2013/12/L34.00P-S35.00P
     println(und, year, month, legs)	//DELME
     val params = new TradeParams(und, year, month, legs)
@@ -80,23 +96,28 @@ object Trades extends Controller {
       }.toList
     }
     
-    private def safeInt(str: String): Int = {
-      try {
-        str.toInt
-      } catch {
-        case e: NumberFormatException => 0
-      }
-    }
-    
-    private def safeBigDecimal(str: String): BigDecimal = {
-      try {
-        BigDecimal(str)
-      } catch {
-        case e: NumberFormatException => BigDecimal("0")
-      }
-    }
   }
   
   case class Leg(isLong: Boolean, strike: BigDecimal, isCall: Boolean)
 
+}
+
+trait SafeCast {
+  
+	def safeInt(str: String): Int = {
+    try {
+      str.toInt
+    } catch {
+      case e: NumberFormatException => 0
+    }
+  }
+  
+  def safeBigDecimal(str: String): BigDecimal = {
+    try {
+      BigDecimal(str)
+    } catch {
+      case e: NumberFormatException => BigDecimal("0")
+    }
+  }
+  
 }

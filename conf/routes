@@ -5,10 +5,12 @@
 GET  /                          		controllers.Application.index
 GET  /*path/							controllers.Application.removeTrailing(path)
 GET  /screener                   		controllers.Screener.screenerNoParams
-GET  /screener/:strat					controllers.Screener.screenerWithParams(strat, sym="all", moneyness: Option[String] ?= None, mindays: Option[Int] ?= None, maxdays: Option[Int] ?= None, minprofitpercent: Option[Int] ?= None, minprofitamount: Option[Int] ?= None, maxlossamount: Option[Int] ?= None)
-GET  /screener/:strat/:sym				controllers.Screener.screenerWithParams(strat, sym, moneyness: Option[String] ?= None, mindays: Option[Int] ?= None, maxdays: Option[Int] ?= None, minprofitpercent: Option[Int] ?= None, minprofitamount: Option[Int] ?= None, maxlossamount: Option[Int] ?= None)
-GET  /trades							controllers.Trades.tradesNoParams(sym="all")
-GET  /trades/:sym						controllers.Trades.tradesNoParams(sym)
+GET  /screener/:strat					controllers.Screener.screener(strat, sym="all", moneyness: Option[String] ?= None, mindays: Option[Int] ?= None, maxdays: Option[Int] ?= None, minprofitpercent: Option[Int] ?= None, minprofitamount: Option[Int] ?= None, maxlossamount: Option[Int] ?= None)
+GET  /screener/:strat/:sym				controllers.Screener.screener(strat, sym, moneyness: Option[String] ?= None, mindays: Option[Int] ?= None, maxdays: Option[Int] ?= None, minprofitpercent: Option[Int] ?= None, minprofitamount: Option[Int] ?= None, maxlossamount: Option[Int] ?= None)
+GET  /trades							controllers.Trades.tradesNoLegs(sym="all", year="0", month="0")
+GET  /trades/:sym						controllers.Trades.tradesNoLegs(sym, year="0", month="0")
+GET  /trades/:sym/:year					controllers.Trades.tradesNoLegs(sym, year, month="0")
+GET  /trades/:sym/:year/:month			controllers.Trades.tradesNoLegs(sym, year, month)
 GET  /trades/:sym/:year/:month/:legs	controllers.Trades.trades(sym, year, month, legs)
 GET  /disclaimer                 		controllers.Application.disclaimer
 GET  /faq		                		controllers.Application.faq

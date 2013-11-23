@@ -13,7 +13,7 @@ object Screener extends Controller {
     Ok(views.html.screener()).withCookies(ScreenParams().cookies:_*)
   }
   
-  def screenerWithParams(
+  def screener(
       strategy: String, 
       unds: String, 
       moneyness: Option[String], 
