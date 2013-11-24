@@ -3,7 +3,7 @@ package models
 import anorm.Row
 import scala.math.BigDecimal
 
-class BullCall(row: Row) extends TwoLegTrade(row) with Bullish {
+class BullCall(row: Row) extends TwoLegTrade(row) with Bullish with Calls {
   
   override def lowerStrike: BigDecimal = longStrike
   override def higherStrike: BigDecimal = shortStrike

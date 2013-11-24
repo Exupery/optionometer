@@ -1,9 +1,9 @@
-@(trades: List[TwoLegTrade])
-@main("Screener") {
-@if(trades.isEmpty) {
-<h1>No trades found matching criteria</h1>
-} else {
-@partials.screener.traderesults(trades)
-}
-@partials.screener.fullscreenerform()
+@(trade: Option[TwoLegTrade]=None)
+@main(trade.getOrElse("Trade Not Found").toString) {
+	@if(trade.nonEmpty) {
+		<h1>@trade.get.toString</h1>
+	} else {
+		<h1 class="red">Trade not found</h1>
+		@partials.screener.fullscreenerform()
+	}
 }

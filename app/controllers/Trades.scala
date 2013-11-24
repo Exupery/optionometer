@@ -35,13 +35,8 @@ object Trades extends Controller with SafeCast {
   }
   
   def trades(und: String, year: String, month: String, legs: String) = Action {
-    //MSFT/2013/12/L34.00P-S35.00P
-    println(und, year, month, legs)	//DELME
     val params = new TradeParams(und, year, month, legs)
-    println(params.underlier, params.expiryYear, params.expiryMonth, params.legs)	//DELME
-    val trade = twoLegTrade(params)
-    println(trade) //DELME
-    Ok
+    Ok(views.html.trades(twoLegTrade(params)))
   }
   
   def twoLegTrade(params: TradeParams): Option[TwoLegTrade] = {
@@ -70,9 +65,9 @@ object Trades extends Controller with SafeCast {
     return if (rows.nonEmpty) {
       val row = rows.head
 	    Some(if (longLeg.isCall) {
-	      if (longLeg.strike < shortLeg.strike) new BullCall(row) else new BullPut(row)
+	      if (longLeg.strike < shortLeg.strike) new BullCall(row) else new BearCall(row)
 	    } else {
-	      if (longLeg.strike < shortLeg.strike) new BearCall(row) else new BearPut(row)
+	      if (longLeg.strike < shortLeg.strike) new BullPut(row) else new BearPut(row)
 	    })
     } else {
       None

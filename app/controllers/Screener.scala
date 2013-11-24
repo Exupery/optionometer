@@ -39,7 +39,7 @@ object Screener extends Controller {
       .splitAt(500)
     }
     Logger.debug(trades._1.size+" "+trades._2.size)			//DELME
-    Ok(views.html.trades(trades._1)).withCookies(params(strat).cookies:_*)
+    Ok(views.html.screener(Some(trades._1))).withCookies(params(strat).cookies:_*)
   }
   
   def screen(params: ScreenParams): Set[TwoLegTrade] = {

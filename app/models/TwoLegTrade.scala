@@ -53,7 +53,10 @@ abstract class TwoLegTrade(row: Row) {
   
   def twoDigit(bigDec: BigDecimal): BigDecimal = bigDec.setScale(2, BigDecimal.RoundingMode.HALF_UP)
   
-  override def toString: String = "L:" + longSym + "\tS:" + shortSym + "\tlast: " + undLast + "\tscore: " + score
+  override def toString: String = {
+    val callOrPut = if (this.isInstanceOf[Calls]) "C" else "P"
+    underlier + " " + expMonthYear + " L" + longStrike + callOrPut + " S" + shortStrike + callOrPut
+  }
   
   override def hashCode: Int = comparator.hashCode
   
@@ -68,3 +71,5 @@ abstract class TwoLegTrade(row: Row) {
 
 trait Bullish {}
 trait Bearish {}
+trait Calls {}
+trait Puts {}

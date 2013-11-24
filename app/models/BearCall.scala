@@ -3,7 +3,7 @@ package models
 import anorm.Row
 import scala.math.BigDecimal
 
-class BearCall(row: Row) extends TwoLegTrade(row) with Bearish {
+class BearCall(row: Row) extends TwoLegTrade(row) with Bearish with Calls {
   
   override def lowerStrike: BigDecimal = shortStrike
   override def higherStrike: BigDecimal = longStrike
