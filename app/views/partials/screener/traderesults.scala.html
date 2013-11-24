@@ -1,4 +1,5 @@
 @(trades: List[TwoLegTrade])
+@import views.helpers.TradesHelper._
 <table class="table table-dark table-hover table-condensed table-striped table-sorted table-responsive">
 	<thead>
 		<tr>
@@ -26,12 +27,7 @@
 			<td>@trade.profitPercent<span class="s">%</span></td>
 			<td>@trade.profitPercentPerDay<span class="s">%</span></td>
 			<td><div class="hovertip" data-content="@trade.daysToExpire days until expiration">@trade.expMonthYear</div></td>
-			<td class="center">@defining(trade match {
-				case t: BullCall => ("Bull Call", "Buy calls and sell an equal amount of calls with a higher strike")
-				case t: BearCall => ("Bear Call", "Sell calls and buy an equal amount of calls with a higher strike")
-				case t: BullPut => ("Bull Put", "Sell puts and buy an equal amount of puts with a lower strike")
-				case t: BearPut => ("Bear Put", "Buy puts and sell an equal amount of puts with a lower strike")
-			}) { case (strat, desc) => 
+			<td class="center">@defining(stratWithDescription(trade)) { case (strat, desc) => 
 				<div class="hovertip" data-content="@desc">@strat</div>
 			}
 			</td>					

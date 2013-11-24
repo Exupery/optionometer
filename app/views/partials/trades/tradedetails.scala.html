@@ -1,0 +1,12 @@
+@(trade: TwoLegTrade)
+@import views.helpers.TradesHelper._
+<div class="center">
+@details(trade).map { case(k, v) =>
+	<div class="panel panel-success inlineblock">
+		<div class="panel-heading">@k</div>
+		<div class="panel-body">@v</div>
+	</div>
+}
+<!-- P/L graph -->
+<!-- Trade metrics -->
+</div>
