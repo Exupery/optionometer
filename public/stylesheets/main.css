@@ -162,6 +162,19 @@ th.headerSortDown {
 .popover .arrow {
 	display: none;
 }
+.list-group {
+	margin-right: 2em;
+}
+.list-group-item {
+	width: 110%;
+}
+.metrics-key,
+.metrics-value {
+	display: inline-block;
+}
+.metrics-value {
+	float: right;
+}
 .adsense {
 	position: absolute;
 	bottom: 80px;

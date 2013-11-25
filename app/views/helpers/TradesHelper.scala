@@ -24,5 +24,37 @@ object TradesHelper {
 			case trade: BearPut => ("Bear Put", "Buy puts and sell an equal amount of puts with a lower strike")
     }
   }
+
+  def profitMetrics(trade: TwoLegTrade): List[(String, Any)] = {
+    val aboveBelow = if (trade.undLast > trade.maxProfitPrice) "above" else "below" 
+    return List(
+        ("Max profit price", trade.maxProfitPrice),
+        ("Distance "+aboveBelow+" max profit", Math.abs(trade.percentToMaxProfit.toDouble)+"%"),
+        ("Max profit amount", "$"+trade.maxProfitAmount*100),
+        ("Max profit percent", trade.profitPercent+"%"),
+        ("Profit percent per day", trade.profitPercentPerDay+"%")
+      )
+  }
+  
+  def lossMetrics(trade: TwoLegTrade): List[(String, Any)] = {
+    val aboveBelowMaxLoss = if (trade.undLast > trade.maxLossPrice) "above" else "below"
+    val aboveBelowBreakeven = if (trade.undLast > trade.breakevenPrice) "above" else "below" 
+    return List(
+        ("Max loss price", trade.maxLossPrice),
+        ("Distance "+aboveBelowMaxLoss+" max loss", Math.abs(trade.percentToMaxLoss.toDouble)+"%"),
+        ("Max loss amount", "$"+trade.maxLossAmount*100),
+        ("Breakeven price", trade.breakevenPrice),
+        ("Distance "+aboveBelowBreakeven+" breakeven", Math.abs(trade.percentToBreakeven.toDouble)+"%")
+        
+      )
+  }
+  
+  def panelClass(trade: TwoLegTrade): String = {
+    return if (trade.undLast >= trade.maxLossPrice && trade.undLast <= trade.maxProfitPrice) {
+      "panel-warning"
+    } else {
+      if (trade.isItm) "panel-success" else "panel-danger"
+    }
+  }
   
 }

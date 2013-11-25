@@ -38,6 +38,8 @@ abstract class TwoLegTrade(row: Row) {
   val percentPerDayToMaxLoss = twoDigit(if (daysToExpire != 0) percentToMaxLoss / daysToExpire else percentToMaxLoss)
   val percentPerDayToBreakeven = twoDigit(if (daysToExpire != 0) percentToBreakeven / daysToExpire else percentToBreakeven)
 
+  lazy val isItm: Boolean = if (this.isInstanceOf[Bullish]) undLast > maxProfitPrice else undLast < maxProfitPrice
+  
   lazy val score: Double = {
 		val profitDist = if (this.isInstanceOf[Bullish]) (-percentPerDayToMaxProfit) else percentPerDayToMaxProfit
     (profitPercentPerDay * profitDist).toDouble
