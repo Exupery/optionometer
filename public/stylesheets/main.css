@@ -163,10 +163,7 @@ th.headerSortDown {
 	display: none;
 }
 .list-group {
-	margin-right: 2em;
-}
-.list-group-item {
-	width: 110%;
+	width: 18em;
 }
 .metrics-key,
 .metrics-value {
