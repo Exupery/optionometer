@@ -49,6 +49,14 @@ object TradesHelper {
       )
   }
   
+  def currentlyProfitable(trade: TwoLegTrade): Boolean = {
+    return if (trade.isInstanceOf[Bullish]) {
+      trade.undLast >= trade.breakevenPrice
+    } else {
+      trade.undLast <= trade.breakevenPrice
+    }
+  }
+  
   def panelClass(trade: TwoLegTrade): String = {
     return if (trade.undLast >= trade.maxLossPrice && trade.undLast <= trade.maxProfitPrice) {
       "panel-warning"

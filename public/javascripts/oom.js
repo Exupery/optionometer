@@ -1,3 +1,5 @@
+google.load("visualization", "1.0", {packages:["corechart"]});
+
 $(document).ready(function() {
 	
 	$("#screener-full").submit(function() {
@@ -28,6 +30,51 @@ $(document).ready(function() {
 	});
 
 });
+
+function drawProfitLossChart(trade, id) {
+	var strikeDiff = Math.abs(trade.higherPrice - trade.lowerPrice);
+	var data = google.visualization.arrayToDataTable([
+        ["Price", "Profit/Loss"],
+        [Math.min(trade.lowerPrice-strikeDiff, trade.currentPrice-strikeDiff), trade.lowerAmount],
+        [trade.lowerPrice, trade.lowerAmount],
+        [trade.higherPrice, trade.higherAmount],
+        [Math.max(trade.higherPrice+strikeDiff, trade.currentPrice+strikeDiff), trade.higherAmount],
+    ]);
+	
+	var cpColor = (trade.currentlyProfitable) ? "#468847" : "#B94A48" ;
+	new google.visualization.LineChart(document.getElementById(id)).draw(data, {
+		curveType: "none",
+		height: 350,
+		lineWidth: 5,
+		colors: ["#222222"],
+		legend: {position: "none"},
+		chartArea: {
+			top: 10,
+			height: "80%"
+		},
+		hAxis: {
+			title: "Price at Expiration",
+			baseline: trade.currentPrice,
+			baselineColor: cpColor
+		},
+		vAxis: {
+			viewWindow: {max: Math.max(trade.higherAmount, trade.lowerAmount) * 1.25},
+			format: "$#",
+			title: "Profit / Loss",
+			baseline: 0
+		}
+	});
+	increaseBaselineWidth(cpColor);
+}
+
+function increaseBaselineWidth(fillColor) {
+	$("rect").each(function () {
+		var fill = $(this).attr("fill");
+		if (fill && fill.toUpperCase() == fillColor.toUpperCase()) {
+			$(this).attr("width", 3);
+		}
+	});
+}
 
 function submitScreen(formId) {
 	var strat = $(formId + " #strat").val();

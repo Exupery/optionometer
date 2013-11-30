@@ -8,7 +8,7 @@
 			<div class="panel-body">@v</div>
 		</div>
 	}
-	<div><!-- P/L graph --></div>
+	@partials.trades.plgraph(trade)
 	<ul class="list-group inlineblock left">
 	@profitMetrics(trade).map { case(k, v) =>
 		<li class="list-group-item @panelClass">

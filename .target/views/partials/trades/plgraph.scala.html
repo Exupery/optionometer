@@ -1,0 +1,12 @@
+@(trade: TwoLegTrade)
+<div id="pl-graph"></div>
+<script>
+	var graphData = new Object();
+	graphData.maxLossAmount = @trade.maxLossAmount;
+	graphData.maxLossPrice = @trade.maxLossPrice;
+	graphData.maxProfitAmount = @trade.maxProfitAmount;
+	graphData.maxProfitPrice = @trade.maxProfitPrice;
+	graphData.currentPrice = @trade.undLast;
+	graphData.currentlyProfitable = "#0000FF";
+	drawProfitLossChart(graphData);
+</script>
