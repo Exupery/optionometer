@@ -77,7 +77,7 @@ form .col-lg-2 {
 	color: #FFFFFF;	
 }
 #top-nav a:hover {
-	color: #94FF99;	
+	color: #67B26B;	
 }
 #footer {
 	position: absolute;
@@ -107,9 +107,6 @@ form .col-lg-2 {
 }
 #screener-button {
 	padding: 14px 32px;
-}
-td {
-	text-align: right;
 }
 .table-dark {
 	color: #FFFFFF;
@@ -146,7 +143,19 @@ th.headerSortDown {
 	color: #F0FFF0;
 }
 .table-condensed tbody>tr>td {
+	text-align: right;
 	padding: 4px;
+	padding-right: 1em;
+}
+.table-condensed tbody>tr>td.center {
+	text-align: center;
+	padding-right: 0;
+}
+.table-dark td a {
+	color: #F0FFF0;
+}
+.table-dark td a:visited {
+	color: #8CB18C;
 }
 .hovertip {
 	width: 100%;

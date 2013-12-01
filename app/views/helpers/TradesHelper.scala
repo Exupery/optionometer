@@ -1,8 +1,19 @@
 package views.helpers
 
 import models._
+import java.text.SimpleDateFormat
+import java.util.Date
 
 object TradesHelper {
+  
+  def detailPath(trade: TwoLegTrade): String = {
+    return {
+      val df = new SimpleDateFormat("yyyy/MM")
+      df.format(new Date(trade.expires * 1000))
+      trade.underlier + "/" + df.format(new Date(trade.expires * 1000)) + "/" + 
+      "L" + trade.longStrike + trade.callOrPut + "-S" + trade.shortStrike + trade.callOrPut
+    }
+  }
   
   def details(trade: TwoLegTrade): List[(String, Any)] = {
     val callOrPut = if (trade.isInstanceOf[Calls]) "Call" else "Put"

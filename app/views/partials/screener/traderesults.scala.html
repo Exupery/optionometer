@@ -4,15 +4,16 @@
 	<thead>
 		<tr>
 			<th>Underlier</th>
-			<th>Underlier Last</th>
+			<th>Last</th>
 			<th>Lower Strike</th>
 			<th>Higher Strike</th>
 			<th>Max Loss</th>
 			<th>Max Profit</th>
-			<th>Profit percent</th>
+			<th>Profit Percent</th>
 			<th>Profit per Day</th>
 			<th>Expires</th>
-			<th>Strategy</th>		
+			<th>Strategy</th>
+			<th>Details</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -22,15 +23,16 @@
 			<td>@trade.undLast</td>
 			<td>@trade.lowerStrike</td>
 			<td>@trade.higherStrike</td>
-			<td><span class="s">$</span>@trade.maxLossAmount</td>
-			<td><span class="s">$</span>@trade.maxProfitAmount</td>
+			<td><span class="s">$</span>@((trade.maxLossAmount*100).toInt)</td>
+			<td><span class="s">$</span>@((trade.maxProfitAmount*100).toInt)</td>
 			<td>@trade.profitPercent<span class="s">%</span></td>
 			<td>@trade.profitPercentPerDay<span class="s">%</span></td>
 			<td><div class="hovertip" data-content="@trade.daysToExpire days until expiration">@trade.expMonthYear</div></td>
 			<td class="center">@defining(stratWithDescription(trade)) { case (strat, desc) => 
 				<div class="hovertip" data-content="@desc">@strat</div>
 			}
-			</td>					
+			</td>
+			<td class="center"><a href="/trades/@detailPath(trade)">View</a></td>			
 		</tr>
 	}
 	</tbody>

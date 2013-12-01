@@ -39,7 +39,7 @@ abstract class TwoLegTrade(row: Row) {
   val percentPerDayToBreakeven = twoDigit(if (daysToExpire != 0) percentToBreakeven / daysToExpire else percentToBreakeven)
 
   lazy val isItm: Boolean = if (this.isInstanceOf[Bullish]) undLast > maxProfitPrice else undLast < maxProfitPrice
-  
+  lazy val callOrPut = if (this.isInstanceOf[Calls]) "C" else "P"
   lazy val score: Double = {
 		val profitDist = if (this.isInstanceOf[Bullish]) (-percentPerDayToMaxProfit) else percentPerDayToMaxProfit
     (profitPercentPerDay * profitDist).toDouble
@@ -56,7 +56,6 @@ abstract class TwoLegTrade(row: Row) {
   def twoDigit(bigDec: BigDecimal): BigDecimal = bigDec.setScale(2, BigDecimal.RoundingMode.HALF_UP)
   
   override def toString: String = {
-    val callOrPut = if (this.isInstanceOf[Calls]) "C" else "P"
     underlier + " " + expMonthYear + " L" + longStrike + callOrPut + " S" + shortStrike + callOrPut
   }
   

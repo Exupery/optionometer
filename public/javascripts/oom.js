@@ -58,7 +58,10 @@ function drawProfitLossChart(trade, id) {
 			baselineColor: cpColor
 		},
 		vAxis: {
-			viewWindow: {max: Math.max(trade.higherAmount, trade.lowerAmount) * 1.25},
+			viewWindow: {
+				max: Math.max(trade.higherAmount, trade.lowerAmount) * 1.15,
+				min: Math.min(trade.higherAmount, trade.lowerAmount) * 1.1
+			},
 			format: "$#",
 			title: "Profit / Loss",
 			baseline: 0
