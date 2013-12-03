@@ -18,5 +18,5 @@ GET  /privacy	                		controllers.Application.privacy
 GET  /recommendations            		controllers.Application.recommendations
 GET  /tos		                		controllers.Application.tos
 
-GET  /assets/*file               		controllers.Assets.at(path="/public", file)
 GET  /robots.txt			        	controllers.Assets.at(path="/public", file="robots.txt")
+GET  /assets/*file               		controllers.Assets.at(path="/public", file)

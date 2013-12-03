@@ -40,6 +40,9 @@ class ScreenerSpec extends Specification {
 	    	  controllers.Screener.moneyClause(strat, "ntm") must equalTo(ntmClause)
 	    	  controllers.Screener.moneyClause(strat, "any") must equalTo(anyClause)
         }
+        
+        bullStrats.size must be_>=(3)
+        bearStrats.size must be_>=(3)
           
       }
       
@@ -55,6 +58,7 @@ class ScreenerSpec extends Specification {
 	          val result = controllers.Screener.screen(params)
 	          result.size must beGreaterThan(0)
           }
+          underliers.size must be_>=(3)
         }
       }
   }
