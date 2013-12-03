@@ -16,7 +16,7 @@ object ApplicationBuild extends Build {
 
 
   val main = play.Project(appName, appVersion, appDependencies).settings(
-         
+    scalaVersion := "2.10.2"
   )
 
 }
