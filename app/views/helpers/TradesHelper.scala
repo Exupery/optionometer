@@ -9,7 +9,6 @@ object TradesHelper {
   def detailPath(trade: TwoLegTrade): String = {
     return {
       val df = new SimpleDateFormat("yyyy/MM")
-      df.format(new Date(trade.expires * 1000))
       trade.underlier + "/" + df.format(new Date(trade.expires * 1000)) + "/" + 
       "L" + trade.longStrike + trade.callOrPut + "-S" + trade.shortStrike + trade.callOrPut
     }
