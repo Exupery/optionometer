@@ -1,12 +1,13 @@
-package test
+package models
 
 import org.specs2.mutable._
-
+import org.specs2.runner._
+import org.junit.runner._
 import play.api.test._
 import play.api.test.Helpers._
 import controllers.Screener.ScreenParams
-import models.Strategy
 
+@RunWith(classOf[JUnitRunner])
 class BearCallSpec extends Specification {
   
   val trade = {

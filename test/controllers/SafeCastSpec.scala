@@ -1,8 +1,10 @@
-package test
+package controllers
 
 import org.specs2.mutable._
-import controllers.SafeCast
+import org.specs2.runner._
+import org.junit.runner._
 
+@RunWith(classOf[JUnitRunner])
 class SafeCastSpec extends Specification with SafeCast {
   
   "SafeCast" should {
