@@ -1,5 +1,5 @@
 #! /bin/sh
-play="play $1"
+play="play \"$1\""
 cmd=""
 while read line 
 do
