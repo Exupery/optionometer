@@ -6,7 +6,7 @@ import org.junit.runner._
 import play.api.test._
 import play.api.test.Helpers._
 import com.github.nscala_time.time.Imports._
-import controllers.Trades.TradeParams
+import Trades.TradeParams
 
 @RunWith(classOf[JUnitRunner])
 class TradesSpec extends Specification {
@@ -15,11 +15,12 @@ class TradesSpec extends Specification {
     
     "calculate min & max days" in {
       val now = DateTime.now
-      println(now.getMonthOfYear())	//DELME
-      controllers.Trades.minMaxDays(now.getYear, now.getMonthOfYear-1) must equalTo((None, None))
-      controllers.Trades.minMaxDays(now.getYear-1, now.getMonthOfYear) must equalTo((None, None))
-      controllers.Trades.minMaxDays(now.getYear-1, now.getMonthOfYear-1) must equalTo((None, None))
-      controllers.Trades.minMaxDays(now.getYear, now.getMonthOfYear) must not be equalTo((None, None))
+      if (now.getMonthOfYear > 1) {
+        Trades.minMaxDays(now.getYear, now.getMonthOfYear-1) must equalTo((None, None))
+      }
+      Trades.minMaxDays(now.getYear-1, now.getMonthOfYear) must equalTo((None, None))
+      Trades.minMaxDays(now.getYear-1, now.getMonthOfYear-1) must equalTo((None, None))
+      Trades.minMaxDays(now.getYear, now.getMonthOfYear) must equalTo((Some, Some))
     }
     
     "return a two leg trade" in {
@@ -27,7 +28,7 @@ class TradesSpec extends Specification {
 	      val now = DateTime.now
 	      //TODO get und & legs from DB
 	      val params = new TradeParams("MSFT", now.getYear.toString, now.getMonthOfYear.toString, "L34.00P-S35.00P")
-	      controllers.Trades.twoLegTrade(params) must beSome
+	      Trades.twoLegTrade(params) must beSome
       }
     }
     
