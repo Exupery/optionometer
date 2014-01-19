@@ -20,7 +20,10 @@ class TradesSpec extends Specification {
       }
       Trades.minMaxDays(now.getYear-1, now.getMonthOfYear) must equalTo((None, None))
       Trades.minMaxDays(now.getYear-1, now.getMonthOfYear-1) must equalTo((None, None))
-      Trades.minMaxDays(now.getYear, now.getMonthOfYear) must equalTo((Some, Some))
+      val minMax = Trades.minMaxDays(now.getYear, now.getMonthOfYear) 
+      minMax must not equalTo((None, None))
+      minMax._1 must beSome
+      minMax._2 must beSome
     }
     
     "return a two leg trade" in {

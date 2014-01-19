@@ -20,7 +20,7 @@ object Trades extends Controller with SafeCast {
     val now = DateTime.now
     val curYear = now.getYear
     val year4d = if (year < 100) year + 2000 else year
-    val minMax = if (year4d > curYear || (year4d == curYear && (month >= now.getMonthOfYear) || month == 0)) {
+    val minMax = if (year4d > curYear || (year4d == curYear && month >= now.getMonthOfYear)) {
       val startMonth = if (month > 0 && month <= 12) month else (if (year4d == curYear) now.getMonthOfYear else 1)
       val expRangeStart = new DateTime(year4d, startMonth, 1, 0, 0)
       val expRangeEnd = if (month > 0 && month <= 12) expRangeStart.plusMonths(1) else new DateTime(year4d, 12, 31, 0, 0)
