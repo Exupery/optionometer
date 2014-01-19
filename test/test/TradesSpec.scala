@@ -12,6 +12,7 @@ class TradesSpec extends Specification {
     
     "calculate min & max days" in {
       val now = DateTime.now
+      println(now.getMonthOfYear())	//DELME
       controllers.Trades.minMaxDays(now.getYear, now.getMonthOfYear-1) must equalTo((None, None))
       controllers.Trades.minMaxDays(now.getYear-1, now.getMonthOfYear) must equalTo((None, None))
       controllers.Trades.minMaxDays(now.getYear-1, now.getMonthOfYear-1) must equalTo((None, None))

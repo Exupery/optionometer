@@ -5,12 +5,12 @@ import scala.math.BigDecimal
 
 class BullPut(row: Row) extends TwoLegTrade(row) with Bullish with Puts {
   
-  override def lowerStrike: BigDecimal = longStrike
-  override def higherStrike: BigDecimal = shortStrike
-  override def maxProfitAmount: BigDecimal = shortBid - longAsk
-  override def maxLossAmount: BigDecimal = higherStrike - lowerStrike - maxProfitAmount
-  override def maxProfitPrice: BigDecimal = higherStrike
-  override def maxLossPrice: BigDecimal = lowerStrike
-  override def breakevenPrice: BigDecimal = higherStrike - maxProfitAmount
+  val lowerStrike = longStrike
+  val higherStrike = shortStrike
+  val maxProfitAmount = shortBid - longAsk
+  val maxLossAmount = higherStrike - lowerStrike - maxProfitAmount
+  val maxProfitPrice = higherStrike
+  val maxLossPrice = lowerStrike
+  val breakevenPrice = higherStrike - maxProfitAmount
 
 }

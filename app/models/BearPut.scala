@@ -5,12 +5,12 @@ import scala.math.BigDecimal
 
 class BearPut(row: Row) extends TwoLegTrade(row) with Bearish with Puts {
   
-  override def lowerStrike: BigDecimal = shortStrike
-  override def higherStrike: BigDecimal = longStrike
-  override def maxProfitAmount: BigDecimal = higherStrike - lowerStrike - maxLossAmount
-  override def maxLossAmount: BigDecimal = longAsk - shortBid
-  override def maxProfitPrice: BigDecimal = lowerStrike
-  override def maxLossPrice: BigDecimal = higherStrike
-  override def breakevenPrice: BigDecimal = higherStrike - maxLossAmount
+  val lowerStrike = shortStrike
+  val higherStrike = longStrike
+  val maxLossAmount = longAsk - shortBid
+  val maxProfitAmount = higherStrike - lowerStrike - maxLossAmount
+  val maxProfitPrice = lowerStrike
+  val maxLossPrice = higherStrike
+  val breakevenPrice = higherStrike - maxLossAmount
 
 }
