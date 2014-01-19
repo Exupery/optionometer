@@ -25,7 +25,7 @@ abstract class Trade(row: Row) {
     df.format(new Date(expires * 1000))
   }
   
-  lazy val profitPercent = twoDigit(if (maxLossAmount > 0) maxProfitAmount / maxLossAmount * 100 else 0)
+  lazy val profitPercent = twoDigit(if (maxLossAmount != 0) maxProfitAmount / maxLossAmount * 100 else 0)
   lazy val profitPercentPerDay = twoDigit(if (daysToExpire > 0) profitPercent / daysToExpire else profitPercent)
   lazy val amountToMaxProfit = maxProfitPrice - undLast
   lazy val amountToMaxLoss = maxLossPrice - undLast
