@@ -2,7 +2,8 @@ package models
 
 import anorm._
 
-abstract class FourLegTrade(row: Row) extends Trade(row) {
+abstract class FourLegTrade(underlier: String, undLast: BigDecimal, expires: Long) 
+	extends Trade(underlier, undLast, expires) {
   
   val comparator: String					//TODO
   val maxProfitAmount: BigDecimal	//TODO

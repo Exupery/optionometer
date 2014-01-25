@@ -1,11 +1,10 @@
 package models
 
-import anorm._
 import java.math.{BigDecimal => JBD}
 import java.text.SimpleDateFormat
 import java.util.Date
 
-abstract class Trade(row: Row) {
+abstract case class Trade(underlier: String, last: BigDecimal, expires: Long) {
   
   val maxProfitAmount: BigDecimal
   val maxLossAmount: BigDecimal
@@ -15,10 +14,8 @@ abstract class Trade(row: Row) {
   val comparator: String
   val isItm: Boolean
   
-  val underlier = row[String]("underlier")
-  val undLast = twoDigit(row[JBD]("undLast"))
+  val undLast = twoDigit(last)
   val callOrPut = if (this.isInstanceOf[Calls]) "C" else "P"
-  val expires = row[Long]("expires")
   val daysToExpire = ((expires - (System.currentTimeMillis / 1000)) / (60 * 60 *24)).toInt
   val expMonthYear = {
     val df = new SimpleDateFormat("dd MMM yyyy")

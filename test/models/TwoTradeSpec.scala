@@ -6,7 +6,6 @@ import org.junit.runner._
 import play.api.test._
 import play.api.test.Helpers._
 import controllers.Screener.ScreenParams
-import scala.math.BigDecimal.int2bigDecimal
 
 @RunWith(classOf[JUnitRunner])
 class TwoTradeSpec extends Specification {
@@ -17,12 +16,10 @@ class TwoTradeSpec extends Specification {
     }
   }
   
-  def twoDigit(bigDec: BigDecimal): BigDecimal = bigDec.setScale(2, BigDecimal.RoundingMode.HALF_UP)
-  
   "a TwoLegTrade" should {
     
     "calculate the max profit percent" in {
-    	trade.profitPercent must equalTo(twoDigit((trade.maxProfitAmount / trade.maxLossAmount) * 100))
+    	trade.profitPercent must equalTo(trade.twoDigit((trade.maxProfitAmount / trade.maxLossAmount) * 100))
     }
     
   }

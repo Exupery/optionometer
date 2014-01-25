@@ -3,7 +3,8 @@ package models
 import anorm._
 import java.math.{BigDecimal => JBD}
 
-abstract class TwoLegTrade(row: Row) extends Trade(row) {
+abstract class TwoLegTrade(row: Row) 
+	extends Trade(row[String]("underlier"), row[JBD]("undLast"), row[Long]("expires")) {
   
   val lowerStrike: BigDecimal
   val higherStrike: BigDecimal
