@@ -53,5 +53,6 @@ abstract case class Trade(underlier: String, last: BigDecimal, expires: Long) {
 
 trait Bullish {}
 trait Bearish {}
+trait Rangebound {}
 trait Calls {}
 trait Puts {}

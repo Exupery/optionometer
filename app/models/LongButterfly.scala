@@ -5,7 +5,7 @@ package models
  * (or BullPut + BearPut) with identical short strikes and equal distance between short and long strikes 
  */
 abstract class LongButterfly(lowerTwoLeg: TwoLegTrade, higherTwoLeg: TwoLegTrade) 
-	extends FourLegTrade(lowerTwoLeg.underlier, lowerTwoLeg.undLast, lowerTwoLeg.expires) {
+	extends FourLegTrade(lowerTwoLeg.underlier, lowerTwoLeg.undLast, lowerTwoLeg.expires) with Rangebound {
 
   val comparator = lowerTwoLeg.comparator + higherTwoLeg.comparator
   val maxLossAmount = lowerTwoLeg.longAsk + higherTwoLeg.longAsk - lowerTwoLeg.shortBid - higherTwoLeg.shortBid

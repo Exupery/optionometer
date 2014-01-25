@@ -1,27 +1,39 @@
 package models
 
-case object BullCalls extends Strategy {
+case object BullCalls extends Strategy with Bullish {
   override def toString: String = "bullcalls"
 }
 
-case object BearCalls extends Strategy {
+case object BearCalls extends Strategy with Bearish{
   override def toString: String = "bearcalls"
 }
 
-case object BullPuts extends Strategy {
+case object BullPuts extends Strategy with Bullish {
   override def toString: String = "bullputs"
 }
 
-case object BearPuts extends Strategy {
+case object BearPuts extends Strategy with Bearish {
   override def toString: String = "bearputs"
 }
 
-case object AllBullish extends Strategy {
+case object AllBullish extends Strategy with Bullish {
   override def toString: String = "bullish"
 }
 
-case object AllBearish extends Strategy {
+case object AllBearish extends Strategy with Bearish {
   override def toString: String = "bearish"
+}
+
+case object LongCallButterflies extends Strategy with Rangebound {
+  override def toString: String = "longcallbutterflies"
+}
+
+case object LongPutButterflies extends Strategy with Rangebound {
+  override def toString: String = "longputbutterflies"
+}
+
+case object AllRangebound extends Strategy with Rangebound {
+  override def toString: String = "rangebound"
 }
 
 case object All extends Strategy {
@@ -30,13 +42,11 @@ case object All extends Strategy {
 
 class Strategy() {
   
-  def isBullish: Boolean = {
-    this.equals(BullCalls) || this.equals(BullPuts) || this.equals(AllBullish)
-  }
+  val bullish = Set(Strategy.BullCalls, Strategy.BullCalls, Strategy.AllBullish)
   
-  def isBearish: Boolean = {
-    this.equals(BearCalls) || this.equals(BearPuts) || this.equals(AllBearish)
-  }
+  def isBullish: Boolean = this.isInstanceOf[Bullish]
+  def isBearish: Boolean = this.isInstanceOf[Bearish]
+  def isRangebound: Boolean = this.isInstanceOf[Rangebound]
   
 }
 
@@ -47,5 +57,8 @@ object Strategy {
   val BearPuts: Strategy = models.BearPuts
   val AllBullish: Strategy = models.AllBullish
   val AllBearish: Strategy = models.AllBearish
+  val LongCallButterflies: Strategy = models.LongCallButterflies
+  val LongPutButterflies: Strategy = models.LongPutButterflies
+  val AllRangebound: Strategy = models.AllRangebound
   val All: Strategy = models.All
 }
