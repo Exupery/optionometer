@@ -8,7 +8,7 @@ import play.api.test.Helpers._
 import controllers.Screener.ScreenParams
 
 @RunWith(classOf[JUnitRunner])
-class TwoTradeSpec extends Specification {
+class LongButterflySpec extends Specification  {
   
   val itmTrade = {
     running(FakeApplication()) {
@@ -22,7 +22,7 @@ class TwoTradeSpec extends Specification {
     }
   }
   
-  "a TwoLegTrade" should {
+  "LongButterfly" should {
     
     "determine if trade is in or out of the money" in {
     	itmTrade.isItm must beTrue
