@@ -15,6 +15,6 @@
 		graphData.higherPrice = @trade.maxLossPrice;
 	}
 	graphData.currentPrice = @trade.undLast;
-	graphData.currentlyProfitable = @currentlyProfitable(trade);
+	graphData.currentlyProfitable = @trade.isProfitable;
 	drawProfitLossChart(graphData, "pl-graph");
 </script>
