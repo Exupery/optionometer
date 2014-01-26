@@ -34,13 +34,13 @@ case object AllBearish extends Strategy with Bearish {
 
 case object LongCallButterflies extends Strategy with Rangebound with Calls {
   val name = "Long Call Butterfly"
-  val description = "do stuff"
+  val description = "Buy a call, sell two calls at the next strike, buy a call at the next strike"
   override def toString: String = "longcallbutterflies"
 }
 
 case object LongPutButterflies extends Strategy with Rangebound with Puts {
   val name = "Long Put Butterfly"
-  val description = "do stuff"
+  val description = "Buy a put, sell two puts at the next strike, buy a put at the next strike"
   override def toString: String = "longputbutterflies"
 }
 
