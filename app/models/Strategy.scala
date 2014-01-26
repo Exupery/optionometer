@@ -1,18 +1,26 @@
 package models
 
 case object BullCalls extends Strategy with Bullish {
+  val name = "Bull Call"
+  val description = "Buy calls and sell an equal amount of calls with a higher strike"
   override def toString: String = "bullcalls"
 }
 
-case object BearCalls extends Strategy with Bearish{
+case object BearCalls extends Strategy with Bearish {
+  val name = "Bear Call"
+  val description = "Sell calls and buy an equal amount of calls with a higher strike"
   override def toString: String = "bearcalls"
 }
 
 case object BullPuts extends Strategy with Bullish {
+  val name = "Bull Put"
+  val description = "Sell puts and buy an equal amount of puts with a lower strike"
   override def toString: String = "bullputs"
 }
 
 case object BearPuts extends Strategy with Bearish {
+  val name = "Bear Put"
+  val description = "Buy puts and sell an equal amount of puts with a lower strike"
   override def toString: String = "bearputs"
 }
 
@@ -25,10 +33,14 @@ case object AllBearish extends Strategy with Bearish {
 }
 
 case object LongCallButterflies extends Strategy with Rangebound {
+  val name = "Long Call Butterfly"
+  val description = "do stuff"
   override def toString: String = "longcallbutterflies"
 }
 
 case object LongPutButterflies extends Strategy with Rangebound {
+  val name = "Long Put Butterfly"
+  val description = "do stuff"
   override def toString: String = "longputbutterflies"
 }
 
@@ -41,8 +53,6 @@ case object All extends Strategy {
 }
 
 class Strategy() {
-  
-  val bullish = Set(Strategy.BullCalls, Strategy.BullCalls, Strategy.AllBullish)
   
   def isBullish: Boolean = this.isInstanceOf[Bullish]
   def isBearish: Boolean = this.isInstanceOf[Bearish]

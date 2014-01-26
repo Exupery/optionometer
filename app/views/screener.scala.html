@@ -1,4 +1,4 @@
-@(trades: Option[List[TwoLegTrade]]=None)
+@(trades: Option[List[Trade]]=None)
 @main("Screener") {
 	@if(trades.nonEmpty) {
 		@if(trades.get.isEmpty) {

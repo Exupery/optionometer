@@ -1,12 +1,11 @@
-@(trades: List[TwoLegTrade])
+@(trades: List[Trade])
 @import views.helpers.TradesHelper._
 <table class="table table-dark table-hover table-condensed table-striped table-sorted table-responsive">
 	<thead>
 		<tr>
 			<th>Underlier</th>
 			<th>Last</th>
-			<th>Lower Strike</th>
-			<th>Higher Strike</th>
+			<th>Legs</th>
 			<th>Max Loss</th>
 			<th>Max Profit</th>
 			<th>Profit Percent</th>
@@ -21,8 +20,7 @@
 		<tr>
 			<td class="center">@trade.underlier</td>
 			<td>@trade.undLast</td>
-			<td>@trade.lowerStrike</td>
-			<td>@trade.higherStrike</td>
+			<td class="center">@trade.legs</td>
 			<td><span class="s">$</span>@((trade.maxLossAmount*100).toInt)</td>
 			<td><span class="s">$</span>@((trade.maxProfitAmount*100).toInt)</td>
 			<td>@trade.profitPercent<span class="s">%</span></td>

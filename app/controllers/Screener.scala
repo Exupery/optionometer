@@ -27,14 +27,17 @@ object Screener extends Controller {
       case "bearcalls" => Strategy.BearCalls
       case "bullputs" => Strategy.BullPuts
       case "bearputs" => Strategy.BearPuts
+      case "longcallbutterflies" => Strategy.LongCallButterflies
+      case "longputbutterflies" => Strategy.LongPutButterflies
       case "bullish" => Strategy.AllBullish
       case "bearish" => Strategy.AllBearish
+      case "rangebound" => Strategy.AllRangebound
       case _ => Strategy.All
     }
     def params = ScreenParams(_: Strategy, unds.split("[, ]"), moneyness, minDays, maxDays, minProfitPercent, minProfitAmount, maxLossAmount)
-    val strats = if (strat.ne(Strategy.All)) Set(strat) else Set(Strategy.AllBullish, Strategy.AllBearish)
+    val strats = if (strat.ne(Strategy.All)) Set(strat) else Set(Strategy.AllBullish, Strategy.AllBearish, Strategy.AllRangebound)
     val trades = {
-      strats.foldLeft(List.empty[TwoLegTrade])((lst, strt) => lst ++ screen(params(strt)))
+      strats.foldLeft(List.empty[Trade])((lst, strt) => lst ++ screen(params(strt)))
       .sortBy(_.score)(Ordering.Double.reverse)
       .splitAt(500)
     }

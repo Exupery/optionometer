@@ -1,16 +1,16 @@
 package views.helpers
 
 import models._
+import models.Strategy
 import java.text.SimpleDateFormat
 import java.util.Date
 
 object TradesHelper {
   
-  def detailPath(trade: TwoLegTrade): String = {
+  def detailPath(trade: Trade): String = {
     return {
       val df = new SimpleDateFormat("yyyy/MM")
-      trade.underlier + "/" + df.format(new Date(trade.expires * 1000)) + "/" + 
-      "L" + trade.longStrike + trade.callOrPut + "-S" + trade.shortStrike + trade.callOrPut
+      trade.underlier + "/" + df.format(new Date(trade.expires * 1000)) + "/" + (trade.legs.replaceAll("\\s", "-"))
     }
   }
   
@@ -26,12 +26,14 @@ object TradesHelper {
       )
   }
   
-  def stratWithDescription(trade: TwoLegTrade): (String, String) = {
+  def stratWithDescription(trade: Trade): (String, String) = {
     return trade match {
-      case trade: BullCall => ("Bull Call", "Buy calls and sell an equal amount of calls with a higher strike")
-			case trade: BearCall => ("Bear Call", "Sell calls and buy an equal amount of calls with a higher strike")
-			case trade: BullPut => ("Bull Put", "Sell puts and buy an equal amount of puts with a lower strike")
-			case trade: BearPut => ("Bear Put", "Buy puts and sell an equal amount of puts with a lower strike")
+      case strat: BullCall => (BullCalls.name, BullCalls.description)
+			case strat: BearCall => (BearCalls.name, BearCalls.description)
+			case strat: BullPut => (BullPuts.name, BullPuts.description)
+			case strat: BearPut => (BearPuts.name, BearPuts.description)
+			case strat: LongCallButterfly => (LongCallButterflies.name, LongCallButterflies.description)
+			case strat: LongPutButterfly => (LongPutButterflies.name, LongPutButterflies.description)
     }
   }
 
