@@ -9,28 +9,42 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import views.helpers.TradesHelper
 import controllers.Screener.ScreenParams
-import models.{Strategy, TwoLegTrade}
+import models._
 
 @RunWith(classOf[JUnitRunner])
 class TradesHelperSpec extends Specification {
   
-  val trade = {
+  val twoLegTrade = {
     running(FakeApplication()) {
-    	controllers.Screener.screen(ScreenParams(Strategy.BullCalls)).toList(0)
+    	controllers.Screener.screen(ScreenParams(Strategy.BullCalls)).toList.head
     }
-  }
+  }.asInstanceOf[TwoLegTrade]
+  
+  val fourLegTrade = {
+    running(FakeApplication()) {
+    	controllers.Screener.screen(ScreenParams(Strategy.LongCallButterflies)).toList.head
+    }
+  }.asInstanceOf[FourLegTrade]
   
   "TradesHelperSpec" should {
     
-    "determine path to detail view" in {
+    "determine path to detail view (two legs)" in {
       val df = new SimpleDateFormat("yyyy/MM")
-      val path = trade.underlier + "/" + df.format(new Date(trade.expires * 1000)) + "/" + 
-      "L" + trade.asInstanceOf[TwoLegTrade].longStrike + trade.callOrPut + "-S" + trade.asInstanceOf[TwoLegTrade].shortStrike + trade.callOrPut
-      TradesHelper.detailPath(trade) must be_==(path)
+      val path = twoLegTrade.underlier + "/" + df.format(new Date(twoLegTrade.expires * 1000)) + "/" + 
+      "L" + twoLegTrade.longStrike + twoLegTrade.callOrPut + "-S" + twoLegTrade.shortStrike + twoLegTrade.callOrPut
+      TradesHelper.detailPath(twoLegTrade) must be_==(path)
+    }
+    
+    "determine path to detail view (four legs)" in {
+//      val df = new SimpleDateFormat("yyyy/MM")
+//      val path = twoLegTrade.underlier + "/" + df.format(new Date(twoLegTrade.expires * 1000)) + "/" + 
+//      "L" + twoLegTrade.longStrike + twoLegTrade.callOrPut + "-S" + twoLegTrade.shortStrike + twoLegTrade.callOrPut
+//      TradesHelper.detailPath(twoLegTrade) must be_==(path)
+      true must beFalse	//TODO
     }
     
     "get trade details" in {
-      val details = TradesHelper.details(trade)
+      val details = TradesHelper.details(twoLegTrade)
       details must beAnInstanceOf[List[(String, Any)]]
       details.nonEmpty must be_==(true)
     }
@@ -52,16 +66,30 @@ class TradesHelperSpec extends Specification {
       }
     }
     
-    "get profit metrics" in {
-      val metrics = TradesHelper.profitMetrics(trade)
+    "get profit metrics (two legs)" in {
+      val metrics = TradesHelper.profitMetrics(twoLegTrade.asInstanceOf[TwoLegTrade])
       metrics must beAnInstanceOf[List[(String, Any)]]
       metrics.nonEmpty must be_==(true)
     }
     
-    "get loss metrics" in {
-      val metrics = TradesHelper.lossMetrics(trade)
+    "get profit metrics (four legs)" in {
+//      val metrics = TradesHelper.profitMetrics(twoLegTrade.asInstanceOf[TwoLegTrade])
+//      metrics must beAnInstanceOf[List[(String, Any)]]
+//      metrics.nonEmpty must be_==(true)
+      true must beFalse	//TODO
+    }
+    
+    "get loss metrics (two legs)" in {
+      val metrics = TradesHelper.lossMetrics(twoLegTrade.asInstanceOf[TwoLegTrade])
       metrics must beAnInstanceOf[List[(String, Any)]]
       metrics.nonEmpty must be_==(true)
+    }
+    
+    "get loss metrics (four legs)" in {
+//      val metrics = TradesHelper.lossMetrics(twoLegTrade.asInstanceOf[TwoLegTrade])
+//      metrics must beAnInstanceOf[List[(String, Any)]]
+//      metrics.nonEmpty must be_==(true)
+      true must beFalse	//TODO
     }
     
     "determine if trade is presently profitable" in {

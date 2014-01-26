@@ -14,16 +14,21 @@ object TradesHelper {
     }
   }
   
-  def details(trade: TwoLegTrade): List[(String, Any)] = {
+  def details(trade: Trade): List[(String, Any)] = {
     val callOrPut = if (trade.isInstanceOf[Calls]) "Call" else "Put"
     return List(
         ("Underlier", trade.underlier.toUpperCase),
         ("Last", trade.undLast),
-        ("Long Leg", trade.longStrike+" "+callOrPut),
-        ("Short Leg", trade.shortStrike+" "+callOrPut),
         ("Expires", trade.expMonthYear),
         ("Strategy", stratWithDescription(trade)._1)
-      )
+      ) ++ (if (trade.isInstanceOf[TwoLegTrade]) {
+        List(
+          ("Long Leg", trade.asInstanceOf[TwoLegTrade].longStrike+" "+callOrPut), 
+          ("Short Leg", trade.asInstanceOf[TwoLegTrade].shortStrike+" "+callOrPut)
+        )
+      } else {
+        List()	//TODO add legs
+      })
   }
   
   def stratWithDescription(trade: Trade): (String, String) = {
@@ -48,6 +53,8 @@ object TradesHelper {
       )
   }
   
+//  def profitMetrics(trade: FourLegTrade): List[(String, Any)] //TODO
+  
   def lossMetrics(trade: TwoLegTrade): List[(String, Any)] = {
     val aboveBelowMaxLoss = if (trade.undLast > trade.maxLossPrice) "above" else "below"
     val aboveBelowBreakeven = if (trade.undLast > trade.breakevenPrice) "above" else "below" 
@@ -61,6 +68,8 @@ object TradesHelper {
       )
   }
   
+//  def lossMetrics(trade: FourLegTrade): List[(String, Any)]	//TODO
+  
   def panelClass(trade: TwoLegTrade): String = {
     return if (trade.undLast >= trade.maxLossPrice && trade.undLast <= trade.maxProfitPrice) {
       "panel-warning"
@@ -68,5 +77,7 @@ object TradesHelper {
       if (trade.isItm) "panel-success" else "panel-danger"
     }
   }
+  
+//  def panelClass(trade: FourLegTrade): String	//TODO
   
 }
