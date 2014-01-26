@@ -10,11 +10,11 @@ import controllers.Screener.ScreenParams
 @RunWith(classOf[JUnitRunner])
 class BearPutSpec extends Specification {
 
-  val trade = {
+  val trade: TwoLegTrade = {
     running(FakeApplication()) {
     	controllers.Screener.screen(ScreenParams(Strategy.BearPuts)).toList(0)
     }
-  }
+  }.asInstanceOf[TwoLegTrade]
   
   "a BearPut" should {
     
