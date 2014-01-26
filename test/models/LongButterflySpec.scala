@@ -12,13 +12,13 @@ class LongButterflySpec extends Specification  {
   
   val itmTrade = {
     running(FakeApplication()) {
-    	controllers.Screener.screen(ScreenParams(Strategy.BullCalls, Seq("all"), Some("itm"))).head
+    	controllers.Screener.screen(ScreenParams(Strategy.LongCallButterflies, Seq("all"), Some("itm"))).head
     }
   }
   
   val otmTrade = {
     running(FakeApplication()) {
-    	controllers.Screener.screen(ScreenParams(Strategy.BullCalls, Seq("all"), Some("otm"))).head
+    	controllers.Screener.screen(ScreenParams(Strategy.LongCallButterflies, Seq("all"), Some("otm"))).head
     }
   }
   
