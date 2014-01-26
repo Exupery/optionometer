@@ -37,21 +37,56 @@ object Screener extends Controller {
     def params = ScreenParams(_: Strategy, unds.split("[, ]"), moneyness, minDays, maxDays, minProfitPercent, minProfitAmount, maxLossAmount)
     val strats = if (strat.ne(Strategy.All)) Set(strat) else Set(Strategy.AllBullish, Strategy.AllBearish, Strategy.AllRangebound)
     val trades = {
-      strats.foldLeft(List.empty[Trade])((lst, strt) => lst ++ screen(params(strt)))
-      .sortBy(_.score)(Ordering.Double.reverse)
-      .splitAt(500)
+      strats.foldLeft(List.empty[Trade])((list, strategy) => list ++ screen(params(strategy)))
+	      .sortBy(_.score)(Ordering.Double.reverse)
+	      .splitAt(500)
     }
     Logger.debug(trades._1.size+" "+trades._2.size)			//DELME
     Ok(views.html.screener(Some(trades._1))).withCookies(params(strat).cookies:_*)
   }
   
-  def screen(params: ScreenParams): Set[TwoLegTrade] = {
+  def screen(params: ScreenParams): Set[Trade] = {
+    return filterResults(params.strat match {
+      case LongCallButterflies | LongPutButterflies => screenFourLeg(params)
+      case _ => screenTwoLeg(params)
+    }, params)
+  }
+  
+  def screenFourLeg(params: ScreenParams): List[FourLegTrade] = {
+    val isCalls = params.strat.isInstanceOf[Calls]
+    val bulls = screenTwoLeg(params, Some(if (isCalls) BullCalls else BullPuts)).groupBy(_.underlier) 
+    val bears = screenTwoLeg(params, Some(if (isCalls) BearCalls else BearPuts)).groupBy(_.underlier)
+
+    val trades = bulls.map { case (und, bullTrades) =>
+      bullTrades.map { bull =>
+        val diff = bull.higherStrike - bull.lowerStrike
+      	val bearTrades = bears.getOrElse(und, List()).filter { bear => 
+      	  (bear.lowerStrike == bull.higherStrike) &&
+      	  (bear.expires == bull.expires) &&
+      	  (bear.higherStrike - bear.lowerStrike == diff)
+        }
+      	if (isCalls) {
+      		bearTrades.map(bear => new LongCallButterfly(bull.asInstanceOf[BullCall], bear.asInstanceOf[BearCall]))
+      	} else {
+      	  bearTrades.map(bear => new LongPutButterfly(bull.asInstanceOf[BullPut], bear.asInstanceOf[BearPut]))
+      	}
+      }.flatten
+    }.flatten
+
+    return (params.moneyness match {
+      case Some("itm") | Some("atm") => trades.filter(_.isItm)
+      case Some("otm") => trades.filterNot(_.isItm)
+      case _ => trades
+    }).toList
+  }
+  
+  def screenTwoLeg(params: ScreenParams, overrideStrat: Option[Strategy]=None): List[TwoLegTrade] = {
     Logger.debug("*** SCREEN START ***") //DELME
+    val strat = overrideStrat.getOrElse(params.strat)
 		val limit = if (params.isAll) 2000 else if (params.underliers.size<10) 4000 else 1000
 		val query = {
-		  "SELECT * FROM twolegs WHERE " +
-		  strikeClause(params.strat) + " AND " +
-		  moneyClause(params.strat, params.moneyness.getOrElse("any")) + " AND " + 
+		  "SELECT * FROM twolegs WHERE " + strikeClause(strat) + " AND " +
+		  (if (overrideStrat.isEmpty) moneyClause(strat, params.moneyness.getOrElse("any")) + " AND " else "") + 
 		  daysClause(params.minDays, params.maxDays)
 		}
     //Iterating through underliers due to anorm's lack of SQL IN support
@@ -62,21 +97,21 @@ object Screener extends Controller {
 			  SQL(query+" AND underlier={underlier} LIMIT {limit}").on("underlier"->und.toUpperCase, "limit"->limit)
 			}
 	    trades ++ runQuery(sql).map { row =>
-	      params.strat match {
-	        case Strategy.BullCalls => new BullCall(row)
-	        case Strategy.BearCalls => new BearCall(row)
-	        case Strategy.BullPuts => new BullPut(row)
-	        case Strategy.BearPuts => new BearPut(row)
-	        case Strategy.AllBullish => if (row[String]("callOrPut").equalsIgnoreCase("C")) new BullCall(row) else new BullPut(row)
-	        case Strategy.AllBearish => if (row[String]("callOrPut").equalsIgnoreCase("C")) new BearCall(row) else new BearPut(row)
+	      strat match {
+	        case BullCalls => new BullCall(row)
+	        case BearCalls => new BearCall(row)
+	        case BullPuts => new BullPut(row)
+	        case BearPuts => new BearPut(row)
+	        case AllBullish => if (row[String]("callOrPut").equalsIgnoreCase("C")) new BullCall(row) else new BullPut(row)
+	        case AllBearish => if (row[String]("callOrPut").equalsIgnoreCase("C")) new BearCall(row) else new BearPut(row)
 	      }
 		  }
     }
 		Logger.debug("*** SCREEN COMPLETE ***") //DELME
-    return filterResults(trades, params)
+    return trades
   }
   
-  def filterResults(trades: List[TwoLegTrade], params: ScreenParams): Set[TwoLegTrade] = {
+  def filterResults(trades: List[Trade], params: ScreenParams): Set[Trade] = {
     val unrealisticPercent = BigDecimal(500)
     val unrealisticPercentPerDay = BigDecimal(15)
     val unrealisticDistancePercentPerDay = BigDecimal(7.5)
@@ -133,7 +168,7 @@ object Screener extends Controller {
       minProfitAmount: Option[Int]=None,
       maxLossAmount: Option[Int]=None) {
     
-    val isAll = underliers.isEmpty || (underliers.size == 1 && underliers(0).equalsIgnoreCase("all"))
+    val isAll = underliers.isEmpty || underliers.head.equalsIgnoreCase("all")
     
     val cookies = Seq(
         cookie("strat", strat.toString), 
@@ -145,6 +180,7 @@ object Screener extends Controller {
         cookie("minProfitPercent", minProfitPercent.getOrElse(0).toString),
         cookie("maxLossAmount", maxLossAmount.getOrElse(0).toString)
     )
+    
     private def cookie(key: String, value: String): Cookie = {
       Cookie(key, value, None, routes.Screener.screenerNoParams.url, None, false, false)
     }

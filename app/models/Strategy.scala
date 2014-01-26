@@ -1,24 +1,24 @@
 package models
 
-case object BullCalls extends Strategy with Bullish {
+case object BullCalls extends Strategy with Bullish with Calls {
   val name = "Bull Call"
   val description = "Buy calls and sell an equal amount of calls with a higher strike"
   override def toString: String = "bullcalls"
 }
 
-case object BearCalls extends Strategy with Bearish {
+case object BearCalls extends Strategy with Bearish with Calls {
   val name = "Bear Call"
   val description = "Sell calls and buy an equal amount of calls with a higher strike"
   override def toString: String = "bearcalls"
 }
 
-case object BullPuts extends Strategy with Bullish {
+case object BullPuts extends Strategy with Bullish with Puts {
   val name = "Bull Put"
   val description = "Sell puts and buy an equal amount of puts with a lower strike"
   override def toString: String = "bullputs"
 }
 
-case object BearPuts extends Strategy with Bearish {
+case object BearPuts extends Strategy with Bearish with Puts {
   val name = "Bear Put"
   val description = "Buy puts and sell an equal amount of puts with a lower strike"
   override def toString: String = "bearputs"
@@ -32,13 +32,13 @@ case object AllBearish extends Strategy with Bearish {
   override def toString: String = "bearish"
 }
 
-case object LongCallButterflies extends Strategy with Rangebound {
+case object LongCallButterflies extends Strategy with Rangebound with Calls {
   val name = "Long Call Butterfly"
   val description = "do stuff"
   override def toString: String = "longcallbutterflies"
 }
 
-case object LongPutButterflies extends Strategy with Rangebound {
+case object LongPutButterflies extends Strategy with Rangebound with Puts {
   val name = "Long Put Butterfly"
   val description = "do stuff"
   override def toString: String = "longputbutterflies"
