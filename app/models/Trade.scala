@@ -14,6 +14,7 @@ abstract case class Trade(underlier: String, last: BigDecimal, expires: Long) {
   val legs: String
   val comparator: String
   val isItm: Boolean
+  val isProfitable: Boolean
   
   val undLast = twoDigit(last)
   val callOrPut = if (this.isInstanceOf[Calls]) "C" else "P"

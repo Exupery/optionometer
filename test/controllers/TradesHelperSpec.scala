@@ -9,7 +9,7 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import views.helpers.TradesHelper
 import controllers.Screener.ScreenParams
-import models.Strategy
+import models.{Strategy, TwoLegTrade}
 
 @RunWith(classOf[JUnitRunner])
 class TradesHelperSpec extends Specification {
@@ -25,7 +25,7 @@ class TradesHelperSpec extends Specification {
     "determine path to detail view" in {
       val df = new SimpleDateFormat("yyyy/MM")
       val path = trade.underlier + "/" + df.format(new Date(trade.expires * 1000)) + "/" + 
-      "L" + trade.longStrike + trade.callOrPut + "-S" + trade.shortStrike + trade.callOrPut
+      "L" + trade.asInstanceOf[TwoLegTrade].longStrike + trade.callOrPut + "-S" + trade.asInstanceOf[TwoLegTrade].shortStrike + trade.callOrPut
       TradesHelper.detailPath(trade) must be_==(path)
     }
     
@@ -66,10 +66,10 @@ class TradesHelperSpec extends Specification {
     
     "determine if trade is presently profitable" in {
       running(FakeApplication()) {
-        val bullish = controllers.Screener.screen(ScreenParams(Strategy.BullCalls)).toList(0)
-        val bearish = controllers.Screener.screen(ScreenParams(Strategy.BearCalls)).toList(0)
-      	TradesHelper.currentlyProfitable(bullish) must be_==(bullish.undLast >= bullish.breakevenPrice)
-      	TradesHelper.currentlyProfitable(bearish) must be_==(bearish.undLast <= bearish.breakevenPrice)
+        val bullish = controllers.Screener.screen(ScreenParams(Strategy.BullCalls)).toList.head
+        val bearish = controllers.Screener.screen(ScreenParams(Strategy.BearCalls)).toList.head
+      	bullish.isProfitable must be_==(bullish.undLast >= bullish.breakevenPrice)
+      	bearish.isProfitable must be_==(bearish.undLast <= bearish.breakevenPrice)
       }
     }
     

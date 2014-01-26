@@ -23,6 +23,7 @@ abstract class TwoLegTrade(row: Row)
     if (longStrike < shortStrike) longLeg + " " + shortLeg else shortLeg + " " + longLeg 
   }
   val comparator = underlier + longStrike + shortStrike + expires + row[String]("callOrPut")
-  lazy val isItm: Boolean = if (this.isInstanceOf[Bullish]) undLast > maxProfitPrice else undLast < maxProfitPrice
+  lazy val isItm = if (this.isInstanceOf[Bullish]) undLast > maxProfitPrice else undLast < maxProfitPrice
+  lazy val isProfitable = if (this.isInstanceOf[Bullish]) undLast > breakevenPrice else undLast < breakevenPrice
   
 }
