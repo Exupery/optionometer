@@ -23,26 +23,33 @@ object Screener extends Controller {
       minProfitAmount: Option[Int],
       maxLossAmount: Option[Int]) = Action {
     val strat = strategy match {
-      case "bullcalls" => Strategy.BullCalls
-      case "bearcalls" => Strategy.BearCalls
-      case "bullputs" => Strategy.BullPuts
-      case "bearputs" => Strategy.BearPuts
-      case "longcallbutterflies" => Strategy.LongCallButterflies
-      case "longputbutterflies" => Strategy.LongPutButterflies
-      case "bullish" => Strategy.AllBullish
-      case "bearish" => Strategy.AllBearish
-      case "rangebound" => Strategy.AllRangebound
-      case _ => Strategy.All
+      case "bullcalls" => BullCalls
+      case "bearcalls" => BearCalls
+      case "bullputs" => BullPuts
+      case "bearputs" => BearPuts
+      case "longcallbutterflies" => LongCallButterflies
+      case "longputbutterflies" => LongPutButterflies
+      case "bullish" => AllBullish
+      case "bearish" => AllBearish
+      case "rangebound" => AllRangebound
+      case _ => All
     }
-    def params = ScreenParams(_: Strategy, unds.split("[, ]"), moneyness, minDays, maxDays, minProfitPercent, minProfitAmount, maxLossAmount)
-    val strats = if (strat.ne(Strategy.All)) Set(strat) else Set(Strategy.AllBullish, Strategy.AllBearish, Strategy.AllRangebound)
+
+    def sp = ScreenParams(_: Strategy, unds.split("[, ]"), moneyness, minDays, maxDays, minProfitPercent, minProfitAmount, maxLossAmount)
+    val params = {
+	    strat match {
+	      case All => List(sp(AllBullish), sp(AllBearish), sp(LongCallButterflies), sp(LongPutButterflies))
+	      case AllRangebound => List(sp(LongCallButterflies), sp(LongPutButterflies))
+	      case _ => List(sp(strat))
+	    }
+	  }
     val trades = {
-      strats.foldLeft(List.empty[Trade])((list, strategy) => list ++ screen(params(strategy)))
+      params.foldLeft(List.empty[Trade])((list, stratParams) => list ++ screen(stratParams))
 	      .sortBy(_.score)(Ordering.Double.reverse)
 	      .splitAt(500)
     }
     Logger.debug(trades._1.size+" "+trades._2.size)			//DELME
-    Ok(views.html.screener(Some(trades._1))).withCookies(params(strat).cookies:_*)
+    Ok(views.html.screener(Some(trades._1))).withCookies(sp(strat).cookies:_*)
   }
   
   def screen(params: ScreenParams): Set[Trade] = {
@@ -56,7 +63,7 @@ object Screener extends Controller {
     val isCalls = params.strat.isInstanceOf[Calls]
     val bulls = screenTwoLeg(params, Some(if (isCalls) BullCalls else BullPuts)).groupBy(_.underlier) 
     val bears = screenTwoLeg(params, Some(if (isCalls) BearCalls else BearPuts)).groupBy(_.underlier)
-
+    
     val trades = bulls.map { case (und, bullTrades) =>
       bullTrades.map { bull =>
         val diff = bull.higherStrike - bull.lowerStrike
@@ -65,6 +72,7 @@ object Screener extends Controller {
       	  (bear.expires == bull.expires) &&
       	  (bear.higherStrike - bear.lowerStrike == diff)
         }
+        
       	if (isCalls) {
       		bearTrades.map(bear => new LongCallButterfly(bull.asInstanceOf[BullCall], bear.asInstanceOf[BearCall]))
       	} else {
@@ -72,7 +80,7 @@ object Screener extends Controller {
       	}
       }.flatten
     }.flatten
-
+    
     return (params.moneyness match {
       case Some("itm") | Some("atm") => trades.filter(_.isItm)
       case Some("otm") => trades.filterNot(_.isItm)
@@ -85,7 +93,8 @@ object Screener extends Controller {
     val strat = overrideStrat.getOrElse(params.strat)
 		val limit = if (params.isAll) 2000 else if (params.underliers.size<10) 4000 else 1000
 		val query = {
-		  "SELECT * FROM twolegs WHERE " + strikeClause(strat) + " AND " +
+		  "SELECT * FROM twolegs WHERE " + strikeClause(strat) + " AND " + 
+		  (if (strat.isInstanceOf[Calls] || strat.isInstanceOf[Puts]) callOrPutClause(strat) + " AND " else "") + 
 		  (if (overrideStrat.isEmpty) moneyClause(strat, params.moneyness.getOrElse("any")) + " AND " else "") + 
 		  daysClause(params.minDays, params.maxDays)
 		}
@@ -125,6 +134,16 @@ object Screener extends Controller {
     }.toSet
   }
   
+  def callOrPutClause(strat: Strategy): String = {
+    if (strat.isInstanceOf[Calls]) {
+      "callOrPut='C'"
+    } else if (strat.isInstanceOf[Puts]) {
+      "callOrPut='P'"
+    } else {
+      ""
+    }
+  }
+  
   def strikeClause(strat: Strategy): String = {
     val opr = strat match {
       case bullish if (strat.isBullish) => "<"
@@ -152,8 +171,8 @@ object Screener extends Controller {
     return "expires BETWEEN " + minExp + " AND " + maxExp
   }
   
-  def runQuery(sql: SimpleSql[Row]): List[Row] = {
-    DB.withConnection(implicit c => sql().toList)
+  def runQuery(sql: SimpleSql[Row]): List[Row] = DB.withConnection { implicit c =>
+    sql().toList
   }
   
   case class ScreenParams(
