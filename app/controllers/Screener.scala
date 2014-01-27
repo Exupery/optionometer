@@ -112,16 +112,14 @@ object Screener extends Controller {
   }
   
   def filterResults(trades: List[Trade], params: ScreenParams): Set[Trade] = {
-    val unrealisticPercent = BigDecimal(500)
-    val unrealisticPercentPerDay = BigDecimal(15)
-    val unrealisticDistancePercentPerDay = BigDecimal(7.5)
+    val unrealisticDistancePercentPerDay = BigDecimal(6.5)
     val minSensibleAmount = BigDecimal(0.05)
     return trades.filter { trade =>
       trade.maxLossAmount < BigDecimal(params.maxLossAmount.getOrElse(9999)) &&
       trade.maxProfitAmount > BigDecimal(params.minProfitAmount.getOrElse(0)) &&
       trade.profitPercent >= BigDecimal(params.minProfitPercent.getOrElse(0)) &&
-      trade.profitPercent < unrealisticPercent &&
-      trade.profitPercentPerDay < unrealisticPercentPerDay &&
+      trade.profitPercent < params.strat.unrealisticPercent &&
+      trade.profitPercentPerDay < params.strat.unrealisticPercentPerDay &&
       trade.percentPerDayToMaxProfit < unrealisticDistancePercentPerDay &&
       trade.maxProfitAmount > minSensibleAmount
     }.toSet

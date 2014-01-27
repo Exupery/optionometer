@@ -58,6 +58,16 @@ class Strategy() {
   def isBearish: Boolean = this.isInstanceOf[Bearish]
   def isRangebound: Boolean = this.isInstanceOf[Rangebound]
   
+  def unrealisticPercent: BigDecimal = {
+    BigDecimal(if (this==LongCallButterflies || this==LongPutButterflies) {
+      1200
+    } else {
+      600
+    })
+  }
+  
+  def unrealisticPercentPerDay: BigDecimal = unrealisticPercent / 40
+  
 }
 
 object Strategy {
