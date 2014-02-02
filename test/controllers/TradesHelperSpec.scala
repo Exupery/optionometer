@@ -28,19 +28,11 @@ class TradesHelperSpec extends Specification {
   
   "TradesHelperSpec" should {
     
-    "determine path to detail view (two legs)" in {
+    "determine path to detail view" in {
       val df = new SimpleDateFormat("yyyy/MM")
       val path = twoLegTrade.underlier + "/" + df.format(new Date(twoLegTrade.expires * 1000)) + "/" + 
       "L" + twoLegTrade.longStrike + twoLegTrade.callOrPut + "-S" + twoLegTrade.shortStrike + twoLegTrade.callOrPut
       TradesHelper.detailPath(twoLegTrade) must be_==(path)
-    }
-    
-    "determine path to detail view (four legs)" in {
-//      val df = new SimpleDateFormat("yyyy/MM")
-//      val path = twoLegTrade.underlier + "/" + df.format(new Date(twoLegTrade.expires * 1000)) + "/" + 
-//      "L" + twoLegTrade.longStrike + twoLegTrade.callOrPut + "-S" + twoLegTrade.shortStrike + twoLegTrade.callOrPut
-//      TradesHelper.detailPath(twoLegTrade) must be_==(path)
-      true must beFalse	//TODO
     }
     
     "get trade details" in {
@@ -67,29 +59,27 @@ class TradesHelperSpec extends Specification {
     }
     
     "get profit metrics (two legs)" in {
-      val metrics = TradesHelper.profitMetrics(twoLegTrade.asInstanceOf[TwoLegTrade])
+      val metrics = TradesHelper.profitMetrics(twoLegTrade)
       metrics must beAnInstanceOf[List[(String, Any)]]
       metrics.nonEmpty must be_==(true)
     }
     
     "get profit metrics (four legs)" in {
-//      val metrics = TradesHelper.profitMetrics(twoLegTrade.asInstanceOf[TwoLegTrade])
-//      metrics must beAnInstanceOf[List[(String, Any)]]
-//      metrics.nonEmpty must be_==(true)
-      true must beFalse	//TODO
+      val metrics = TradesHelper.profitMetrics(fourLegTrade)
+      metrics must beAnInstanceOf[List[(String, Any)]]
+      metrics.nonEmpty must be_==(true)
     }
     
     "get loss metrics (two legs)" in {
-      val metrics = TradesHelper.lossMetrics(twoLegTrade.asInstanceOf[TwoLegTrade])
+      val metrics = TradesHelper.lossMetrics(twoLegTrade)
       metrics must beAnInstanceOf[List[(String, Any)]]
       metrics.nonEmpty must be_==(true)
     }
     
     "get loss metrics (four legs)" in {
-//      val metrics = TradesHelper.lossMetrics(twoLegTrade.asInstanceOf[TwoLegTrade])
-//      metrics must beAnInstanceOf[List[(String, Any)]]
-//      metrics.nonEmpty must be_==(true)
-      true must beFalse	//TODO
+      val metrics = TradesHelper.lossMetrics(fourLegTrade)
+      metrics must beAnInstanceOf[List[(String, Any)]]
+      metrics.nonEmpty must be_==(true)
     }
     
     "determine if trade is presently profitable" in {
