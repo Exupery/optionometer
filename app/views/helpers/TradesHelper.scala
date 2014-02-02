@@ -66,7 +66,8 @@ object TradesHelper {
   private def profitMetrics(trade: FourLegTrade): List[(String, Any)] = {
     val aboveBelow = if (trade.undLast > trade.maxProfitPrice) "above" else "below" 
     return List(
-      ("Max profit range(s)", trade.lowerMaxProfitPrice + " - " + trade.higherMaxProfitPrice),
+      ("Max profit point(s)", trade.lowerMaxProfitPrice + 
+        (if (trade.lowerMaxProfitPrice!=trade.higherMaxProfitPrice) " - " + trade.higherMaxProfitPrice else "")),
       ("Distance "+aboveBelow+" nearest max profit", Math.abs(trade.percentToMaxProfit.toDouble)+"%")
     )
   }
@@ -96,7 +97,7 @@ object TradesHelper {
     val aboveBelowMaxLoss = if (trade.undLast > trade.maxLossPrice) "above" else "below"
     val aboveBelowBreakeven = if (trade.undLast > trade.breakevenPrice) "above" else "below" 
     return List(
-      ("Max loss points", trade.lowerMaxLossPrice+", "+trade.higherMaxLossPrice),
+      ("Max loss point(s)", trade.lowerMaxLossPrice+", "+trade.higherMaxLossPrice),
       ("Distance "+aboveBelowMaxLoss+" nearest max loss", Math.abs(trade.percentToMaxLoss.toDouble)+"%"),
       ("Nearest breakeven price", trade.breakevenPrice),
       ("Distance "+aboveBelowBreakeven+" nearest breakeven", Math.abs(trade.percentToBreakeven.toDouble)+"%")
