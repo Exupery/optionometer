@@ -11,6 +11,8 @@ abstract class LongButterfly(lowerTwoLeg: TwoLegTrade, higherTwoLeg: TwoLegTrade
   val maxLossAmount = lowerTwoLeg.longAsk + higherTwoLeg.longAsk - lowerTwoLeg.shortBid - higherTwoLeg.shortBid
   val maxProfitAmount = lowerTwoLeg.higherStrike - lowerTwoLeg.lowerStrike - maxLossAmount
   val maxProfitPrice = lowerTwoLeg.shortStrike
+  val lowerMaxProfitPrice = maxProfitPrice
+  val higherMaxProfitPrice = maxProfitPrice
   val lowerMaxLossPrice = lowerTwoLeg.lowerStrike + maxLossAmount
   val higherMaxLossPrice = higherTwoLeg.higherStrike - maxLossAmount
   val maxLossPrice = if ((undLast - lowerMaxLossPrice) < (higherMaxLossPrice - undLast)) {
@@ -21,6 +23,9 @@ abstract class LongButterfly(lowerTwoLeg: TwoLegTrade, higherTwoLeg: TwoLegTrade
   val breakevenPrice = maxLossPrice
   val isItm = (undLast > lowerMaxLossPrice) && (undLast < higherMaxLossPrice)
   val isProfitable = isItm
+  
+  val longStrikes = lowerTwoLeg.longStrikes ++ higherTwoLeg.longStrikes
+  val shortStrikes = lowerTwoLeg.shortStrikes ++ higherTwoLeg.shortStrikes
   
   val legsFull = lowerTwoLeg.legsFull + " " + higherTwoLeg.legsFull
   val legsCompact = {

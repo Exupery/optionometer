@@ -17,6 +17,9 @@ abstract class TwoLegTrade(row: Row)
   val shortBid = twoDigit(row[JBD]("shortBid"))
   val shortStrike = twoDigit(row[JBD]("shortStrike"))
   
+  val longStrikes = List(longStrike)
+  val shortStrikes = List(shortStrike)
+  
   val legsFull = {
     val longLeg = "L" + longStrike + callOrPut
     val shortLeg = "S" + shortStrike + callOrPut
