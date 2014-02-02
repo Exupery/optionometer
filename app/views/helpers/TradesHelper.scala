@@ -72,16 +72,12 @@ object TradesHelper {
   }
   
   def lossMetrics(trade: Trade): List[(String, Any)] = {
-    val aboveBelowMaxLoss = if (trade.undLast > trade.maxLossPrice) "above" else "below"
-    val aboveBelowBreakeven = if (trade.undLast > trade.breakevenPrice) "above" else "below" 
     return List(
-      ("Max loss price", trade.maxLossPrice),
-      ("Distance "+aboveBelowMaxLoss+" max loss", Math.abs(trade.percentToMaxLoss.toDouble)+"%"),
-      ("Max loss amount", "$"+trade.maxLossAmount*100),
-      ("Breakeven price", trade.breakevenPrice),
-      ("Distance "+aboveBelowBreakeven+" breakeven", Math.abs(trade.percentToBreakeven.toDouble)+"%")
-      
-    )
+      ("Max loss amount", "$"+trade.maxLossAmount*100)
+    ) ++ (trade match {
+      case t: TwoLegTrade => lossMetrics(t)
+      case t: FourLegTrade => lossMetrics(t)
+    })
   }
   
   def lossMetrics(trade: TwoLegTrade): List[(String, Any)] = {
@@ -90,7 +86,6 @@ object TradesHelper {
     return List(
       ("Max loss price", trade.maxLossPrice),
       ("Distance "+aboveBelowMaxLoss+" max loss", Math.abs(trade.percentToMaxLoss.toDouble)+"%"),
-      ("Max loss amount", "$"+trade.maxLossAmount*100),
       ("Breakeven price", trade.breakevenPrice),
       ("Distance "+aboveBelowBreakeven+" breakeven", Math.abs(trade.percentToBreakeven.toDouble)+"%")
       
@@ -101,9 +96,8 @@ object TradesHelper {
     val aboveBelowMaxLoss = if (trade.undLast > trade.maxLossPrice) "above" else "below"
     val aboveBelowBreakeven = if (trade.undLast > trade.breakevenPrice) "above" else "below" 
     return List(
-      ("Max loss range(s)", "&lt;"+trade.lowerMaxLossPrice+" or &gt;"+trade.higherMaxLossPrice),
+      ("Max loss points", trade.lowerMaxLossPrice+", "+trade.higherMaxLossPrice),
       ("Distance "+aboveBelowMaxLoss+" nearest max loss", Math.abs(trade.percentToMaxLoss.toDouble)+"%"),
-      ("Max loss amount", "$"+trade.maxLossAmount*100),
       ("Nearest breakeven price", trade.breakevenPrice),
       ("Distance "+aboveBelowBreakeven+" nearest breakeven", Math.abs(trade.percentToBreakeven.toDouble)+"%")
       
