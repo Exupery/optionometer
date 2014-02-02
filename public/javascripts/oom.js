@@ -32,13 +32,14 @@ $(document).ready(function() {
 });
 
 function drawProfitLossChart(trade, id) {
-	var strikeDiff = Math.abs(trade.higherPrice - trade.lowerPrice);
 	var data = google.visualization.arrayToDataTable([
         ["Price", "Profit/Loss"],
-        [Math.min(trade.lowerPrice-strikeDiff, trade.currentPrice-strikeDiff), trade.lowerAmount],
-        [trade.lowerPrice, trade.lowerAmount],
-        [trade.higherPrice, trade.higherAmount],
-        [Math.max(trade.higherPrice+strikeDiff, trade.currentPrice+strikeDiff), trade.higherAmount],
+        [Math.min(trade.lowestPrice-trade.strikeDiff, trade.currentPrice-trade.strikeDiff), trade.lowestAmount],
+        [trade.lowestPrice, trade.lowestAmount],
+        [trade.lowerMidPrice, trade.lowerMidAmount],
+        [trade.higherMidPrice, trade.higherMidAmount],
+        [trade.highestPrice, trade.highestAmount],
+        [Math.max(trade.highestPrice+trade.strikeDiff, trade.currentPrice+trade.strikeDiff), trade.highestAmount],
     ]);
 	
 	var cpColor = (trade.currentlyProfitable) ? "#468847" : "#B94A48" ;
@@ -59,8 +60,8 @@ function drawProfitLossChart(trade, id) {
 		},
 		vAxis: {
 			viewWindow: {
-				max: Math.max(trade.higherAmount, trade.lowerAmount) * 1.15,
-				min: Math.min(trade.higherAmount, trade.lowerAmount) * 1.1
+				max: Math.max(trade.highestAmount, trade.lowerMidAmount, trade.lowestAmount) * 1.15,
+				min: Math.min(trade.highestAmount, trade.lowerMidAmount, trade.lowestAmount) * 1.1
 			},
 			format: "$#",
 			title: "Profit / Loss",

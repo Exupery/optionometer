@@ -3,16 +3,36 @@
 <div id="pl-graph"></div>
 <script>
 	var graphData = new Object();
-	@if(trade.isInstanceOf[Bullish]) {
-		graphData.lowerAmount = @(-trade.maxLossAmount * 100);
-		graphData.lowerPrice = @trade.maxLossPrice;
-		graphData.higherAmount = @(trade.maxProfitAmount * 100);
-		graphData.higherPrice = @trade.maxProfitPrice;
-	} else {
-		graphData.lowerAmount = @(trade.maxProfitAmount * 100);
-		graphData.lowerPrice = @trade.maxProfitPrice;
-		graphData.higherAmount = @(-trade.maxLossAmount * 100);
-		graphData.higherPrice = @trade.maxLossPrice;
+	@trade match {
+		case t: TwoLegTrade => {
+			@if(trade.isInstanceOf[Bullish]) {
+				graphData.lowestAmount = @(-t.maxLossAmount * 100);
+				graphData.lowestPrice = @t.maxLossPrice;
+				graphData.highestAmount = @(t.maxProfitAmount * 100);
+				graphData.highestPrice = @t.maxProfitPrice;
+			} else {
+				graphData.lowestAmount = @(t.maxProfitAmount * 100);
+				graphData.lowestPrice = @t.maxProfitPrice;
+				graphData.highestAmount = @(-t.maxLossAmount * 100);
+				graphData.highestPrice = @t.maxLossPrice;
+			}
+			graphData.lowerMidAmount = graphData.lowestAmount;
+			graphData.lowerMidPrice = graphData.lowestPrice;
+			graphData.higherMidAmount = graphData.highestAmount;
+			graphData.higherMidPrice = graphData.highestPrice;
+			graphData.strikeDiff = @(t.higherStrike - t.lowerStrike);
+		}
+		case t: FourLegTrade => {
+			graphData.lowestAmount = @(-t.maxLossAmount * 100);
+			graphData.lowestPrice = @t.lowerMaxLossPrice;
+			graphData.lowerMidAmount = @(t.maxProfitAmount * 100);
+			graphData.lowerMidPrice = @t.lowerMaxProfitPrice;
+			graphData.higherMidAmount = @(t.maxProfitAmount * 100);
+			graphData.higherMidPrice = @t.higherMaxProfitPrice;
+			graphData.highestAmount = @(-t.maxLossAmount * 100);
+			graphData.highestPrice = @t.higherMaxLossPrice;
+			graphData.strikeDiff = @(t.longStrikes(1) - t.shortStrikes(0));
+		}	
 	}
 	graphData.currentPrice = @trade.undLast;
 	graphData.currentlyProfitable = @trade.isProfitable;

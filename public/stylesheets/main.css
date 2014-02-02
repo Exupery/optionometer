@@ -172,7 +172,7 @@ th.headerSortDown {
 	display: none;
 }
 .list-group {
-	width: 18em;
+	width: 22em;
 	margin: 0.75em;
 	margin-top: 1.5em;
 }
@@ -180,8 +180,10 @@ th.headerSortDown {
 .metrics-value {
 	display: inline-block;
 }
-.metrics-value {
-	float: right;
+.badge {
+	border-radius: 0.25em;
+	background-color: #FFFFFF;
+	color: #333333;
 }
 .adsense {
 	position: absolute;
