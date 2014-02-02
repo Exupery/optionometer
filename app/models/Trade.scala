@@ -11,7 +11,8 @@ abstract case class Trade(underlier: String, last: BigDecimal, expires: Long) {
   val maxProfitPrice: BigDecimal
   val maxLossPrice: BigDecimal
   val breakevenPrice: BigDecimal
-  val legs: String
+  val legsFull: String
+  val legsCompact: String
   val comparator: String
   val isItm: Boolean
   val isProfitable: Boolean
@@ -51,7 +52,7 @@ abstract case class Trade(underlier: String, last: BigDecimal, expires: Long) {
     }
   }
   
-  override def toString: String = underlier + " " + expMonthYear + " " + legs
+  override def toString: String = underlier + " " + expMonthYear + " " + legsCompact
   
 }
 

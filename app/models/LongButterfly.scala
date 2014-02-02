@@ -21,7 +21,9 @@ abstract class LongButterfly(lowerTwoLeg: TwoLegTrade, higherTwoLeg: TwoLegTrade
   val breakevenPrice = maxLossPrice
   val isItm = (undLast > lowerMaxLossPrice) && (undLast < higherMaxLossPrice)
   val isProfitable = isItm
-  val legs = {
+  
+  val legsFull = lowerTwoLeg.legsFull + " " + higherTwoLeg.legsFull
+  val legsCompact = {
     val low = lowerTwoLeg
     val cOrP = low.callOrPut
     ("L"+low.lowerStrike+cOrP) + (" S(x2)"+low.higherStrike+cOrP) + (" L"+higherTwoLeg.higherStrike+cOrP)

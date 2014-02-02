@@ -10,7 +10,7 @@ object TradesHelper {
   def detailPath(trade: Trade): String = {
     return {
       val df = new SimpleDateFormat("yyyy/MM")
-      trade.underlier + "/" + df.format(new Date(trade.expires * 1000)) + "/" + (trade.legs.replaceAll("\\s", "-"))
+      trade.underlier + "/" + df.format(new Date(trade.expires * 1000)) + "/" + (trade.legsFull.replaceAll("\\s", "-"))
     }
   }
   

@@ -17,11 +17,12 @@ abstract class TwoLegTrade(row: Row)
   val shortBid = twoDigit(row[JBD]("shortBid"))
   val shortStrike = twoDigit(row[JBD]("shortStrike"))
   
-  val legs = {
+  val legsFull = {
     val longLeg = "L" + longStrike + callOrPut
     val shortLeg = "S" + shortStrike + callOrPut
     if (longStrike < shortStrike) longLeg + " " + shortLeg else shortLeg + " " + longLeg 
   }
+  val legsCompact = legsFull
   val comparator = underlier + longStrike + shortStrike + expires + row[String]("callOrPut")
   lazy val isItm = if (this.isInstanceOf[Bullish]) undLast > maxProfitPrice else undLast < maxProfitPrice
   lazy val isProfitable = if (this.isInstanceOf[Bullish]) undLast > breakevenPrice else undLast < breakevenPrice
