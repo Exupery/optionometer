@@ -36,12 +36,17 @@ object Trades extends Controller with SafeCast {
   
   def trades(und: String, year: String, month: String, legs: String) = Action {
     val params = new TradeParams(und, year, month, legs)
-    Ok(views.html.trades(twoLegTrade(params)))
+    val trade = if (params.legs.size==2) twoLegTrade(params) else if (params.legs.size==4) fourLegTrade(params) else None
+    Ok(views.html.trades(trade))
   }
   
   def twoLegTrade(params: TradeParams): Option[TwoLegTrade] = {
     val longLeg = if (params.legs(0).isLong) params.legs(0) else params.legs(1)
     val shortLeg = if (params.legs(0).isLong) params.legs(1) else params.legs(0)
+    return twoLegTrade(params, longLeg, shortLeg)
+  }
+  
+  def twoLegTrade(params: TradeParams, longLeg: Leg, shortLeg: Leg): Option[TwoLegTrade] = {
     val callOrPut = if (longLeg.isCall) "C" else "P"
     val sql: SimpleSql[Row] = {
       SQL {
@@ -69,6 +74,26 @@ object Trades extends Controller with SafeCast {
 	    } else {
 	      if (longLeg.strike < shortLeg.strike) new BullPut(row) else new BearPut(row)
 	    })
+    } else {
+      None
+    }
+  }
+  
+  def fourLegTrade(params: TradeParams): Option[FourLegTrade] = {
+    val longLegA = if (params.legs(0).isLong) params.legs(0) else params.legs(1)
+    val shortLegA = if (params.legs(0).isLong) params.legs(1) else params.legs(0)
+    val tradeA = twoLegTrade(params, longLegA, shortLegA)
+    val longLegB = if (params.legs(2).isLong) params.legs(2) else params.legs(3)
+    val shortLegB = if (params.legs(2).isLong) params.legs(3) else params.legs(2)
+    val tradeB = twoLegTrade(params, longLegB, shortLegB)
+    return if (tradeA.isDefined && tradeB.isDefined) {
+      tradeA.get match {
+        case a: BullCall => Some(new LongCallButterfly(a, tradeB.get.asInstanceOf[BearCall]))
+        case a: BearCall => Some(new LongCallButterfly(tradeB.get.asInstanceOf[BullCall], a))
+        case a: BullPut => Some(new LongPutButterfly(a, tradeB.get.asInstanceOf[BearPut]))
+        case a: BearPut => Some(new LongPutButterfly(tradeB.get.asInstanceOf[BullPut], a))
+        case _ => None
+      }
     } else {
       None
     }

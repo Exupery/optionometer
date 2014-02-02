@@ -35,6 +35,15 @@ class TradesSpec extends Specification {
       }
     }
     
+    "return a four leg trade" in {
+      running(FakeApplication()) {
+	      val now = DateTime.now
+	      //TODO get und & legs from DB
+	      val params = new TradeParams("MSFT", now.getYear.toString, now.getMonthOfYear.toString, "L35.00C-S36.00C-S36.00C-L37.00C")
+	      Trades.fourLegTrade(params) must beSome
+      }
+    }
+    
   }
 
 }

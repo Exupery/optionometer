@@ -1,6 +1,6 @@
-@(trade: Option[TwoLegTrade]=None)
+@(trade: Option[Trade]=None)
 @main(trade.getOrElse("Trade Not Found").toString) {
-	@if(trade.nonEmpty) {
+	@if(trade.isDefined) {
 		@partials.trades.tradedetails(trade.get)
 	} else {
 		<h1 class="red">Trade not found</h1>
