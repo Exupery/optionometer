@@ -58,6 +58,7 @@ object Trades extends Controller with SafeCast {
         "AND l.call_or_put=s.call_or_put JOIN stocks ON l.underlier=stocks.symbol " +
         "WHERE l.underlier={underlier} AND l.call_or_put={callOrPut} " +
         "AND l.exp_year={expYear} AND l.exp_month={expMonth} " +
+        "AND l.ask>0 AND s.ask>0 " +
         "AND l.strike={longStrike} AND s.strike={shortStrike} LIMIT 1"
       }.on("underlier"->params.underlier, 
           "callOrPut"->callOrPut,

@@ -5,6 +5,7 @@ import play.api._
 import play.api.Play.current
 import play.api.db.DB
 import play.api.mvc._
+import java.math.{BigDecimal => JBD}
 import models._
 
 object Screener extends Controller {
@@ -105,7 +106,7 @@ object Screener extends Controller {
 			} else {
 			  SQL(query+" AND underlier={underlier} LIMIT {limit}").on("underlier"->und.toUpperCase, "limit"->limit)
 			}
-	    trades ++ runQuery(sql).map { row =>
+	    trades ++ runQuery(sql).filter(r=>BigDecimal(r[JBD]("shortbid"))>0.05).map { row =>
 	      strat match {
 	        case BullCalls => new BullCall(row)
 	        case BearCalls => new BearCall(row)
