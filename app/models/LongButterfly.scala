@@ -13,8 +13,10 @@ abstract class LongButterfly(lowerTwoLeg: TwoLegTrade, higherTwoLeg: TwoLegTrade
   val maxProfitPrice = lowerTwoLeg.shortStrike
   val lowerMaxProfitPrice = maxProfitPrice
   val higherMaxProfitPrice = maxProfitPrice
-  val lowerMaxLossPrice = lowerTwoLeg.lowerStrike + maxLossAmount
-  val higherMaxLossPrice = higherTwoLeg.higherStrike - maxLossAmount
+  private def lowerLowerPlusLoss = lowerTwoLeg.lowerStrike + maxLossAmount
+  private def higherHigherMinusLoss = higherTwoLeg.higherStrike - maxLossAmount
+  val lowerMaxLossPrice = BigDecimal(Math.min(lowerLowerPlusLoss.toDouble, higherHigherMinusLoss.toDouble))
+  val higherMaxLossPrice = BigDecimal(Math.max(lowerLowerPlusLoss.toDouble, higherHigherMinusLoss.toDouble))
   val maxLossPrice = if ((undLast - lowerMaxLossPrice) < (higherMaxLossPrice - undLast)) {
     lowerMaxLossPrice
   } else {
